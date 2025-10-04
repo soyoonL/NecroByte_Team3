@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
@@ -20,6 +21,10 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed;
 
     Vector3 moveVec;
+    Vector3 dodgeVec;
+
+    private bool isDodging =false;
+       
 
     void Start()
     {
@@ -34,18 +39,26 @@ public class PlayerController : MonoBehaviour
         
         HandleMovement();
         UpdateAnimator();
-        
-        
+        HandleDodge();
+
+
+
     }
 
     void HandleMovement()
     {
+        
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         Vector3 moveVec = new Vector3(h, 0, v).normalized;
 
         controller.Move(moveVec * currentSpeed * Time.deltaTime);
+
+        if(isDodging)
+        {
+            moveVec = dodgeVec;
+        }
 
         if (h != 0 || v != 0)
         {
@@ -80,4 +93,28 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    void HandleDodge()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            dodgeVec = moveVec;
+            currentSpeed *= 2;
+            
+            isDodging = true;
+
+            Invoke("DodgeOut", 0.5f);
+            animator.SetTrigger("dodgeTrigger");
+
+            Debug.Log(isDodging);
+
+        }
+    }
+    
+    void DodgeOut()
+    {
+        currentSpeed *= 0.5f;
+        isDodging = false;
+    }
+   
 }
