@@ -11,43 +11,47 @@ public class PlayerController : MonoBehaviour
     public float runSpeed = 6.0f;
     public float rotationSpeed = 10.0f;
 
-   
+
     [Header("커포넌트")]
     public Animator animator;
 
     private CharacterController controller;
     private Camera playerCamera;
 
+    [Header("회피 설정")]
+    public float dodgeDistance = 2.5f;      // 이동 거리
+    public float dodgeDuration = 0.25f;     // 이동 시간 (짧을수록 순간 이동 느낌)
+    public float dodgeCooldown = 0.5f;
+
+    private bool isDodging = false;
+    private float lastDodgeTime = 0f;
+    private Vector3 dodgeStartPos;
+    private Vector3 dodgeEndPos;
+    private float dodgeTimer;
+
     private float currentSpeed;
 
     Vector3 moveVec;
     Vector3 dodgeVec;
 
-    private bool isDodging =false;
-       
-
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        
+
     }
 
 
     void Update()
     {
-        
-        
+
         HandleMovement();
         UpdateAnimator();
         HandleDodge();
-
-
 
     }
 
     void HandleMovement()
     {
-        
 
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -55,14 +59,14 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(moveVec * currentSpeed * Time.deltaTime);
 
-        if(isDodging)
+        if (isDodging)
         {
             moveVec = dodgeVec;
         }
 
         if (h != 0 || v != 0)
         {
-            
+
 
             if (Input.GetKey(KeyCode.LeftShift))
             {
@@ -73,7 +77,7 @@ public class PlayerController : MonoBehaviour
                 currentSpeed = walkSpeed;
             }
 
-            
+
         }
         else
         {
@@ -90,31 +94,46 @@ public class PlayerController : MonoBehaviour
     {
         float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
         animator.SetFloat("speed", animatorSpeed);
-        
+
     }
 
     void HandleDodge()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !isDodging && Time.time - lastDodgeTime >= dodgeCooldown)
         {
-            dodgeVec = moveVec;
-            currentSpeed *= 2;
-            
             isDodging = true;
-
-            Invoke("DodgeOut", 0.5f);
+            lastDodgeTime = Time.time;
+            dodgeTimer = 0f;
+            currentSpeed *= 2f;
+            
+            animator.ResetTrigger("dodgeTrigger");
             animator.SetTrigger("dodgeTrigger");
 
-            Debug.Log(isDodging);
-
+            // 시작/끝 위치 계산
+            dodgeStartPos = transform.position;
+            dodgeEndPos = transform.position + transform.forward * dodgeDistance;
         }
+
+        // 회피 중이면 부드럽게 이동
+        if (isDodging)
+        {
+            dodgeTimer += Time.deltaTime;
+            float t = dodgeTimer / dodgeDuration;
+            if (t > 1f) t = 1f;
+
+            
+            float smoothT = 1f - Mathf.Pow(1f - t, 3f);
+            Vector3 newPos = Vector3.Lerp(dodgeStartPos, dodgeEndPos, smoothT);
+            controller.Move(newPos - transform.position);
+
+            
+            if (t >= 1f)
+            {
+                isDodging = false;
+            }
+        }
+
+
     }
-    
-    void DodgeOut()
-    {
-        currentSpeed *= 0.5f;
-        isDodging = false;
-    }
-   
 }
