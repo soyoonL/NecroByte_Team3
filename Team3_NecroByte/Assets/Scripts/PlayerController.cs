@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     //아이템 저장
     GameObject saveObject;
     GameObject equipWeapon;
+    bool isSwap;
+    int equipWeaponIndex = -1;
     
     [Header("무기 저장")]
     public GameObject[] weapons;
@@ -68,6 +70,9 @@ public class PlayerController : MonoBehaviour
         Vector3 moveVec = new Vector3(h, 0, v).normalized;
 
         controller.Move(moveVec * currentSpeed * Time.deltaTime);
+
+        if(isSwap) 
+            moveVec = Vector3.zero;
 
         if (isDodging)
         {
@@ -110,7 +115,7 @@ public class PlayerController : MonoBehaviour
     void HandleDodge()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isDodging && Time.time - lastDodgeTime >= dodgeCooldown)
+        if (Input.GetKeyDown(KeyCode.Space) && !isDodging && Time.time - lastDodgeTime >= dodgeCooldown&&!isSwap)
         {
             isDodging = true;
             lastDodgeTime = Time.time;
@@ -181,6 +186,12 @@ public class PlayerController : MonoBehaviour
 
     void ChangeWeapons()
     {
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) && (!hasWeapons[0] || equipWeaponIndex == 0))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha2) && (!hasWeapons[1] || equipWeaponIndex == 1))
+            return;
+
         int weaponIndex = -1;
         if (Input.GetKeyDown(KeyCode.Alpha1)) weaponIndex = 0;
         if (Input.GetKeyDown(KeyCode.Alpha2)) weaponIndex = 1;
@@ -189,11 +200,22 @@ public class PlayerController : MonoBehaviour
         {
             if (equipWeapon != null) equipWeapon.SetActive(false);
 
+            equipWeaponIndex = weaponIndex;
             equipWeapon = weapons[weaponIndex];
             Debug.Log("무기장착!");
             equipWeapon.SetActive(true);
+
+            animator.SetTrigger("swapTrigger");
+
+            isSwap = true;
+
+            Invoke("SwapOut", 0.4f);
         }
         
         
+    }
+    void SwapOut()
+    {
+        isSwap = false;
     }
 }

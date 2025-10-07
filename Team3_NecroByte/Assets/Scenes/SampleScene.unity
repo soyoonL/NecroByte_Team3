@@ -1406,12 +1406,12 @@ PrefabInstance:
         type: 3}
       propertyPath: weapons.Array.data[0]
       value: 
-      objectReference: {fileID: 695434445}
+      objectReference: {fileID: 1201513840}
     - target: {fileID: 9156895274311233731, guid: 6e008727f2bcfdc4ba93e55e05bd8cbe,
         type: 3}
       propertyPath: weapons.Array.data[1]
       value: 
-      objectReference: {fileID: 1201513840}
+      objectReference: {fileID: 695434445}
     - target: {fileID: 9187389137492830070, guid: 6e008727f2bcfdc4ba93e55e05bd8cbe,
         type: 3}
       propertyPath: m_ApplyRootMotion
