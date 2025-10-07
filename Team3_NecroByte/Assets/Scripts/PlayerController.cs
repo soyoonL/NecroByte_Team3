@@ -34,6 +34,14 @@ public class PlayerController : MonoBehaviour
     Vector3 moveVec;
     Vector3 dodgeVec;
 
+    //아이템 저장
+    GameObject saveObject;
+    GameObject equipWeapon;
+    
+    [Header("무기 저장")]
+    public GameObject[] weapons;
+    public bool[] hasWeapons;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -47,6 +55,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         UpdateAnimator();
         HandleDodge();
+        Interation();
+        ChangeWeapons();
 
     }
 
@@ -135,5 +145,55 @@ public class PlayerController : MonoBehaviour
         }
 
 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag=="Weapon")
+            saveObject = other.gameObject;
+
+        Debug.Log(saveObject.name);
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Weapon")
+            saveObject = null;
+    }
+
+    void Interation()
+    {
+        if(Input.GetKeyDown(KeyCode.E) && saveObject != null)
+        {
+           
+            if (saveObject.tag == "Weapon")
+            {
+                Item item = saveObject.GetComponent<Item>();
+                int weaponIndex = item.value;
+                hasWeapons[weaponIndex] = true;
+
+                Destroy(saveObject);
+
+                Debug.Log("아이템 획득!");
+            }
+        }
+    }
+
+    void ChangeWeapons()
+    {
+        int weaponIndex = -1;
+        if (Input.GetKeyDown(KeyCode.Alpha1)) weaponIndex = 0;
+        if (Input.GetKeyDown(KeyCode.Alpha2)) weaponIndex = 1;
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) && !isDodging )
+        {
+            if (equipWeapon != null) equipWeapon.SetActive(false);
+
+            equipWeapon = weapons[weaponIndex];
+            Debug.Log("무기장착!");
+            equipWeapon.SetActive(true);
+        }
+        
+        
     }
 }
