@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     bool eKey; //상호작용 키
     bool oneKey; //1번 키
     bool twoKey; //2번 키
+    bool fiveKey; //5번 키
     bool aKey; // 공격 키
 
     [Header("이동설정")]
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
         eKey = Input.GetKeyDown(KeyCode.E);
         oneKey = Input.GetKeyDown(KeyCode.Alpha1);
         twoKey = Input.GetKeyDown(KeyCode.Alpha2);
+        fiveKey = Input.GetKeyDown(KeyCode.Alpha5);
         aKey = Input.GetMouseButtonDown(0);
     }
 
@@ -234,12 +236,16 @@ public class PlayerController : MonoBehaviour
             return;
         if (twoKey && (!hasWeapons[1] || equipWeaponIndex == 1))
             return;
+        if(fiveKey && (!hasWeapons[4] || equipWeaponIndex == 4))
+            return;
 
         int weaponIndex = -1;
         if (oneKey) weaponIndex = 0;
         if (twoKey) weaponIndex = 1;
+        if (fiveKey) weaponIndex = 4;
+       
 
-        if (oneKey || twoKey && !isDodging )
+        if (oneKey || twoKey || fiveKey && !isDodging )
         {
             if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
 
