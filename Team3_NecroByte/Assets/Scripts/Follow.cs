@@ -6,14 +6,16 @@ public class Follow : MonoBehaviour
 {
     public Transform target;
     public Vector3 offset;
+
+
+
     void Start()
     {
-        
+        offset = transform.position - target.transform.position;
     }
-
-    
-    void Update()
+    // Update is called once per frame
+    void LateUpdate()
     {
-        transform.position = target.position + offset;
+        transform.position = target.transform.position + offset;
     }
 }
