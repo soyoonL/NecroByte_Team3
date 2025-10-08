@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     bool eKey; //상호작용 키
     bool oneKey; //1번 키
     bool twoKey; //2번 키
+    bool aKey; // 공격 키
 
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
@@ -48,9 +49,13 @@ public class PlayerController : MonoBehaviour
 
     //아이템 저장
     GameObject nearObject;
-    GameObject equipWeapon;
+    Weapon equipWeapon;
     bool isSwap;
     int equipWeaponIndex = -1;
+
+    //공격
+    float fireDelay;
+    bool isFireReady;
 
     void Start()
     {
@@ -61,12 +66,14 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+
         GetInput();
         HandleMovement();
         UpdateAnimator();
         HandleDodge();
         Interation();
         Swap();
+        Attack();
 
     }
 
@@ -79,9 +86,24 @@ public class PlayerController : MonoBehaviour
         eKey = Input.GetKeyDown(KeyCode.E);
         oneKey = Input.GetKeyDown(KeyCode.Alpha1);
         twoKey = Input.GetKeyDown(KeyCode.Alpha2);
+        aKey = Input.GetMouseButtonDown(0);
     }
 
+    void Attack()
+    {
+        if (equipWeapon == null)
+            return;
 
+        fireDelay += Time.deltaTime;
+        isFireReady = equipWeapon.rate < fireDelay;
+
+        if(aKey && isFireReady && !isDodging && !isSwap)
+        {
+            equipWeapon.UseWeapon();
+            animator.SetTrigger("swingTrigger");
+            fireDelay = 0;
+        }
+    }
 
     void HandleMovement()
     {
@@ -178,7 +200,7 @@ public class PlayerController : MonoBehaviour
         if(other.tag=="Weapon")
             nearObject = other.gameObject;
 
-        Debug.Log(nearObject.name);
+       
     }
 
     void OnTriggerExit(Collider other)
@@ -219,12 +241,12 @@ public class PlayerController : MonoBehaviour
 
         if (oneKey || twoKey && !isDodging )
         {
-            if (equipWeapon != null) equipWeapon.SetActive(false);
+            if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
 
             equipWeaponIndex = weaponIndex;
-            equipWeapon = weapons[weaponIndex];
+            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
             Debug.Log("무기장착!");
-            equipWeapon.SetActive(true);
+            equipWeapon.gameObject.SetActive(true);
 
             animator.SetTrigger("swapTrigger");
 
