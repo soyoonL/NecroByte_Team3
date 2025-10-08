@@ -6,11 +6,21 @@ using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : MonoBehaviour
 {
+    //움직임 관련
+    float hAxis; //좌우 방향키
+    float vAxis; //상하 방햐키
+    bool rKey; //달리기 키
+    bool dKey; //회피 키
+    bool eKey; //상호작용 키
+    bool oneKey; //1번 키
+    bool twoKey; //2번 키
+
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
     public float runSpeed = 6.0f;
     public float rotationSpeed = 10.0f;
 
+    private float currentSpeed;
 
     [Header("커포넌트")]
     public Animator animator;
@@ -29,20 +39,18 @@ public class PlayerController : MonoBehaviour
     private Vector3 dodgeEndPos;
     private float dodgeTimer;
 
-    private float currentSpeed;
-
     Vector3 moveVec;
     Vector3 dodgeVec;
-
-    //아이템 저장
-    GameObject saveObject;
-    GameObject equipWeapon;
-    bool isSwap;
-    int equipWeaponIndex = -1;
-    
+  
     [Header("무기 저장")]
     public GameObject[] weapons;
     public bool[] hasWeapons;
+
+    //아이템 저장
+    GameObject nearObject;
+    GameObject equipWeapon;
+    bool isSwap;
+    int equipWeaponIndex = -1;
 
     void Start()
     {
@@ -53,26 +61,39 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        GetInput();
         HandleMovement();
         UpdateAnimator();
         HandleDodge();
         Interation();
-        ChangeWeapons();
+        Swap();
 
     }
+
+    void GetInput()
+    {
+        hAxis = Input.GetAxis("Horizontal");
+        vAxis = Input.GetAxis("Vertical");
+        rKey = Input.GetKey(KeyCode.LeftShift);
+        dKey = Input.GetKeyDown(KeyCode.Space);
+        eKey = Input.GetKeyDown(KeyCode.E);
+        oneKey = Input.GetKeyDown(KeyCode.Alpha1);
+        twoKey = Input.GetKeyDown(KeyCode.Alpha2);
+    }
+
+
 
     void HandleMovement()
     {
 
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float h = hAxis;
+        float v = vAxis;
         Vector3 moveVec = new Vector3(h, 0, v).normalized;
 
         controller.Move(moveVec * currentSpeed * Time.deltaTime);
 
         if(isSwap) 
-            moveVec = Vector3.zero;
+            moveVec = Vector3.zero;  //상호작용할 때 움직임X
 
         if (isDodging)
         {
@@ -83,7 +104,7 @@ public class PlayerController : MonoBehaviour
         {
 
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (rKey)
             {
                 currentSpeed = runSpeed;
             }
@@ -101,7 +122,7 @@ public class PlayerController : MonoBehaviour
 
         if (moveVec != Vector3.zero)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveVec), rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveVec), rotationSpeed * Time.deltaTime);  //탑뷰에서도 자연스럽게 방향전환
         }
     }
 
@@ -115,7 +136,7 @@ public class PlayerController : MonoBehaviour
     void HandleDodge()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isDodging && Time.time - lastDodgeTime >= dodgeCooldown&&!isSwap)
+        if (dKey && !isDodging && Time.time - lastDodgeTime >= dodgeCooldown&&!isSwap)
         {
             isDodging = true;
             lastDodgeTime = Time.time;
@@ -155,48 +176,48 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if(other.tag=="Weapon")
-            saveObject = other.gameObject;
+            nearObject = other.gameObject;
 
-        Debug.Log(saveObject.name);
+        Debug.Log(nearObject.name);
     }
 
     void OnTriggerExit(Collider other)
     {
         if (other.tag == "Weapon")
-            saveObject = null;
+            nearObject = null;
     }
 
     void Interation()
     {
-        if(Input.GetKeyDown(KeyCode.E) && saveObject != null)
+        if(eKey && nearObject != null)
         {
            
-            if (saveObject.tag == "Weapon")
+            if (nearObject.tag == "Weapon")
             {
-                Item item = saveObject.GetComponent<Item>();
+                Item item = nearObject.GetComponent<Item>();
                 int weaponIndex = item.value;
                 hasWeapons[weaponIndex] = true;
 
-                Destroy(saveObject);
+                Destroy(nearObject);
 
                 Debug.Log("아이템 획득!");
             }
         }
     }
 
-    void ChangeWeapons()
+    void Swap()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && (!hasWeapons[0] || equipWeaponIndex == 0))
+        if (oneKey && (!hasWeapons[0] || equipWeaponIndex == 0))
             return;
-        if (Input.GetKeyDown(KeyCode.Alpha2) && (!hasWeapons[1] || equipWeaponIndex == 1))
+        if (twoKey && (!hasWeapons[1] || equipWeaponIndex == 1))
             return;
 
         int weaponIndex = -1;
-        if (Input.GetKeyDown(KeyCode.Alpha1)) weaponIndex = 0;
-        if (Input.GetKeyDown(KeyCode.Alpha2)) weaponIndex = 1;
+        if (oneKey) weaponIndex = 0;
+        if (twoKey) weaponIndex = 1;
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha2) && !isDodging )
+        if (oneKey || twoKey && !isDodging )
         {
             if (equipWeapon != null) equipWeapon.SetActive(false);
 
