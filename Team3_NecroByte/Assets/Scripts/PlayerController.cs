@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
         if(aKey && isFireReady && !isDodging && !isSwap)
         {
             equipWeapon.UseWeapon();
-            animator.SetTrigger("swingTrigger");
+            animator.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "swingTrigger" : "shootTrigger");
             fireDelay = 0;
         }
     }
