@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
         hAxis = Input.GetAxis("Horizontal");
         vAxis = Input.GetAxis("Vertical");
         rKey = Input.GetKey(KeyCode.LeftShift);
-        dKey = Input.GetKeyDown(KeyCode.Space);
+        dKey = Input.GetKey(KeyCode.Space);
         eKey = Input.GetKeyDown(KeyCode.E);
         oneKey = Input.GetKeyDown(KeyCode.Alpha1);
         twoKey = Input.GetKeyDown(KeyCode.Alpha2);
