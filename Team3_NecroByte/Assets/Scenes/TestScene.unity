@@ -1084,6 +1084,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1883954616463736064, guid: 3e822bfce4fa74440b0d6bceb5aa178d,
+        type: 3}
+      propertyPath: Bullet
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2586719913228198503, guid: 3e822bfce4fa74440b0d6bceb5aa178d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1230,6 +1235,16 @@ PrefabInstance:
       propertyPath: bulletPos
       value: 
       objectReference: {fileID: 742031782}
+    - target: {fileID: 8091876013212467194, guid: 3e822bfce4fa74440b0d6bceb5aa178d,
+        type: 3}
+      propertyPath: curBullet
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8091876013212467194, guid: 3e822bfce4fa74440b0d6bceb5aa178d,
+        type: 3}
+      propertyPath: maxBullet
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8091876013212467194, guid: 3e822bfce4fa74440b0d6bceb5aa178d,
         type: 3}
       propertyPath: bulletCase

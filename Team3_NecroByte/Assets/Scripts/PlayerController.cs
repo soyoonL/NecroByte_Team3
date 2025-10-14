@@ -60,9 +60,12 @@ public class PlayerController : MonoBehaviour
     float fireDelay;
     bool isFireReady;
 
-    //아이템
+    [Header("총알 수")]
     public int Bullet;
     public int maxBullet;
+
+    //재장전
+    bool Reloading;
 
     void Start()
     {
@@ -128,8 +131,19 @@ public class PlayerController : MonoBehaviour
 
         if(lKey && !isDodging && !isSwap && isFireReady)
         {
+            animator.SetTrigger("reloadTrigger");
+            Reloading = true;
 
+            Invoke("ReloadOut", 2f); //재장전 속도
         }
+    }
+
+    void ReloadOut()
+    {
+        int reBullet = Bullet < equipWeapon.maxBullet ? Bullet : equipWeapon.maxBullet;
+        equipWeapon.curBullet = reBullet;
+        Reloading = false;
+        Bullet -= reBullet;
     }
 
     void HandleMovement()
@@ -141,7 +155,7 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(moveVec * currentSpeed * Time.deltaTime);
 
-        if(isSwap) 
+        if(isSwap || Reloading ) 
             moveVec = Vector3.zero;  //상호작용할 때 움직임X
 
         if (isDodging)
