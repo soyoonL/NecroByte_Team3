@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     bool fourKey; //4번 키
     bool fiveKey; //5번 키
     bool aKey; // 공격 키
+    bool lKey; //재장전 키
 
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
@@ -59,6 +60,10 @@ public class PlayerController : MonoBehaviour
     float fireDelay;
     bool isFireReady;
 
+    //아이템
+    public int Bullet;
+    public int maxBullet;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -76,6 +81,7 @@ public class PlayerController : MonoBehaviour
         Interation();
         Swap();
         Attack();
+        Reload();
 
     }
 
@@ -91,6 +97,7 @@ public class PlayerController : MonoBehaviour
         fourKey = Input.GetKeyDown(KeyCode.Alpha4);
         fiveKey = Input.GetKeyDown(KeyCode.Alpha5);
         aKey = Input.GetMouseButtonDown(0);
+        lKey = Input.GetMouseButtonDown(1);
     }
 
     void Attack()
@@ -106,6 +113,22 @@ public class PlayerController : MonoBehaviour
             equipWeapon.UseWeapon();
             animator.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "swingTrigger" : "shootTrigger");
             fireDelay = 0;
+        }
+    }
+
+    void Reload()
+    {
+        if(equipWeapon == null) 
+            return;
+
+        if (equipWeapon.type == Weapon.Type.Melee)
+            return;
+        if (Bullet == 0)
+            return;
+
+        if(lKey && !isDodging && !isSwap && isFireReady)
+        {
+
         }
     }
 
