@@ -16,9 +16,10 @@ public class DialogSystem : MonoBehaviour
     public int curDialogIndex = -1;     // ÇöÀç ´ë»ç ¼ø¹ø
     public int curSpeakerIndex = 0;     // ÇöÀç ¸»À» ÇÏ´Â È­ÀÚÀÇ speakers ¹è¿­ ¼ø
 
+
     public void Awake()
     {
-        SetUp();
+        SetUp(); 
     }
 
     public void SetUp()
@@ -27,23 +28,24 @@ public class DialogSystem : MonoBehaviour
         {
             SetActiveObjects(speakers[i], false);
             speakers[i].imageCharacter.gameObject.SetActive(true);
-           
+            Debug.Log("¾Æ´Ï¾Æ´Ï¾Æ¤ÑÇÏÆR´ÏÇÏ");
         }
     }
 
     public bool UpdateDialog()
     {
-        if (isFirst == true)
+        if(isFirst == true)
         {
             SetUp();
 
             if (isAutoStart) SetNextDialog();
 
-            isFirst = false;
+           isFirst = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            
             if ( dialogs.Length> curDialogIndex + 1)
             {
                 SetNextDialog();
@@ -55,8 +57,12 @@ public class DialogSystem : MonoBehaviour
                 {
                     SetActiveObjects(speakers[i], false);
                     speakers[i].imageCharacter.gameObject.SetActive(false);
-                }
+                    gameObject.SetActive(false);
 
+                    Debug.Log("µ¥È­³¡¤¼");
+                   
+                }
+                
                 return true;
             }
         }

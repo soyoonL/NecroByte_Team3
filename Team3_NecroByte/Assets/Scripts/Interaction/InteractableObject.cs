@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
+using static DialogSystem;
 
 public class InteractableObject : MonoBehaviour
 {
@@ -23,7 +24,9 @@ public class InteractableObject : MonoBehaviour
     public GameObject dialogSystem;
     public GameObject dialogProgress;
     public GameObject dialogPage1;
-    public GameObject dialogPage2;  
+    public GameObject dialogPage2;
+
+    DialogSystem diaSystem;
 
 
     public enum InteractionType
@@ -83,9 +86,12 @@ public class InteractableObject : MonoBehaviour
 
     public virtual void Interact()
     {
+        
         switch (interactionType) //상호작용에 따른 기본동작
         {
+            
             case InteractionType.Item:
+                Debug.Log(11111111);
                 CollectItem();    
                 break;  
             case InteractionType.Machine:
@@ -98,7 +104,12 @@ public class InteractableObject : MonoBehaviour
                 CollectItem();
                 break;
             case InteractionType.NPC:
+                Debug.Log(2222222222);
                 TalkToNPC();
+                dialogSystem.SetActive(true);
+                dialogProgress.SetActive(true);
+                dialogPage1.SetActive(true);
+                dialogPage2.SetActive(true);
                 break;
         }
     }
@@ -126,10 +137,9 @@ public class InteractableObject : MonoBehaviour
     protected virtual void TalkToNPC() //NPC 대화
     {
         Debug.Log($"{objectName}와 대화를 시작합니다."); //우선 디버그로만
-        dialogSystem.SetActive( true );
-        dialogProgress.SetActive( true );
-        dialogPage1.SetActive( true );
-        dialogPage2.SetActive( true );  
+       
+
       
+
     }
 }

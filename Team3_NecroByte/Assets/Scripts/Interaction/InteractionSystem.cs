@@ -34,7 +34,9 @@ public class InteractionSystem : MonoBehaviour
         if(curInteractiable != null && Input.GetKeyDown(interactionKey)) //참조할 오브젝트가 있고 e키를 누르면 클래스에 있는 Interact 함수를 실행
         {
             curInteractiable.Interact();
+           
         }
+      
     }
 
     void ShowInteractionUI(string text)

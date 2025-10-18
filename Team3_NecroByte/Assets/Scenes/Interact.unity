@@ -432,6 +432,72 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5197bac1433b864ea76f52d8ff7f80c, type: 3}
+--- !u!1 &180438229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 180438231}
+  - component: {fileID: 180438230}
+  m_Layer: 0
+  m_Name: DialogSystem02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &180438230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180438229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2abaf6ada729a409e629c4fcaeae7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speakers:
+  - imageCharacter: {fileID: 1224844972}
+    imageDialog: {fileID: 475185083}
+    textName: {fileID: 628423713}
+    textDialogue: {fileID: 1501306911}
+    objectArrow: {fileID: 47850072}
+  - imageCharacter: {fileID: 881353943}
+    imageDialog: {fileID: 1047020448}
+    textName: {fileID: 1220700147}
+    textDialogue: {fileID: 1495636595}
+    objectArrow: {fileID: 866077927}
+  dialogs:
+  - speakerIndex: 1
+    name: BangBoo 2
+    dialogue: Why??
+  - speakerIndex: 0
+    name: BangBoo 1
+    dialogue: Nothing......
+  isAutoStart: 0
+  isFirst: 1
+  curDialogIndex: -1
+  curSpeakerIndex: 0
+--- !u!4 &180438231
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180438229}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 972.4039, y: 698.54504, z: -10.58368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &317966877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4102986075333478629, guid: f541d158b697ae24782d8d757f579337,
@@ -1405,6 +1471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogSystem01: {fileID: 688219107}
+  dialogObject: {fileID: 688219106}
 --- !u!4 &1136877861
 Transform:
   m_ObjectHideFlags: 0
@@ -3235,4 +3302,5 @@ SceneRoots:
   - {fileID: 1570466731}
   - {fileID: 1451017399}
   - {fileID: 688219108}
+  - {fileID: 180438231}
   - {fileID: 1136877861}
