@@ -19,7 +19,11 @@ public class InteractableObject : MonoBehaviour
     private Color originColor;
     private bool isHighlighted = false;
 
-    
+    [Header("대화 설정")]
+    public GameObject dialogSystem;
+    public GameObject dialogProgress;
+    public GameObject dialogPage1;
+    public GameObject dialogPage2;  
 
 
     public enum InteractionType
@@ -122,5 +126,10 @@ public class InteractableObject : MonoBehaviour
     protected virtual void TalkToNPC() //NPC 대화
     {
         Debug.Log($"{objectName}와 대화를 시작합니다."); //우선 디버그로만
+        dialogSystem.SetActive( true );
+        dialogProgress.SetActive( true );
+        dialogPage1.SetActive( true );
+        dialogPage2.SetActive( true );  
+      
     }
 }
