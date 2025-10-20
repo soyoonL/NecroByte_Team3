@@ -7,14 +7,16 @@ using UnityEngine.UI;
 public class DialogSystem : MonoBehaviour
 {
     [SerializeField]
-    public Speaker[] speakers;          // 대화에 참여하는 캐릭터 UI 배열
+    public Speaker[] speakers;            // 대화에 참여하는 캐릭터 UI 배열
     [SerializeField]
-    public DialogData[] dialogs;        // 현재 분기의 대사 목록 배열
+    public DialogData[] dialogs;          // 현재 분기의 대사 목록 배열
     [SerializeField]
-    public bool isAutoStart = true;     // 자동 시작 여부
-    public bool isFirst = true;         // 최초 1회만 호출하기 위한 변수
-    public int curDialogIndex = -1;     // 현재 대사 순번
-    public int curSpeakerIndex = 0;     // 현재 말을 하는 화자의 speakers 배열 순
+    public bool isAutoStart = true;       // 자동 시작 여부
+    public bool isFirst = true;           // 최초 1회만 호출하기 위한 변수
+    public int curDialogIndex = -1;       // 현재 대사 순번
+    public int curSpeakerIndex = 0;       // 현재 말을 하는 화자의 speakers 배열 순
+    private float typingSpeed = 0.1f;     // 텍스트 타이핑 효과의 재생 속도
+    private bool isTypingEffect = false;  // 텍스트 타이핑 효과를 재생중인지
 
 
     public void Awake()
@@ -49,12 +51,26 @@ public class DialogSystem : MonoBehaviour
 
             if (isAutoStart) SetNextDialog();
 
-           isFirst = false;
+            isFirst = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            // 텍스트 타이핑 효과 재생 중일 때, 마우스 왼쪽 클릭하면 타이핑 효과 종료
+            if(isTypingEffect == true)
+            {
+                isTypingEffect = false;
+
+                // 타이핑 효과를 중지하고, 현재 대사 전체를 출력
+                StopCoroutine("OnTypingText");
+                speakers[curSpeakerIndex].textDialogue.text = dialogs[curDialogIndex].dialogue;
+                // 대사가 완료되었을 때, 출력되는 커서 활성화
+                speakers[curSpeakerIndex].objectArrow.SetActive(true);
+
+                return false;
+            }
             
+            // 대사가 남아있을 경우 다음 대사 진행
             if ( dialogs.Length> curDialogIndex + 1)
             {
                 SetNextDialog();
@@ -81,15 +97,24 @@ public class DialogSystem : MonoBehaviour
 
     public void SetNextDialog()
     {
+        // 이전 화자의 대화 관련 오브젝트 비활성화
         SetActiveObjects(speakers[curSpeakerIndex], false);
 
+        // 다음 대사 진행
         curDialogIndex++;
 
+        // 현재 화자 순번 설정
         curSpeakerIndex = dialogs[curDialogIndex].speakerIndex;
 
+        // 현재 화자 대화 관련 오브젝트 활성화
         SetActiveObjects(speakers[curSpeakerIndex], true);
+
+        // 현재 화자 이름 텍스트 설정
         speakers[curSpeakerIndex].textName.text = dialogs[curDialogIndex].name;
-        speakers[curSpeakerIndex].textDialogue.text = dialogs[curDialogIndex].dialogue;
+
+        // 현재 화자의 대사 텍스트 설정
+        //speakers[curSpeakerIndex].textDialogue.text = dialogs[curDialogIndex].dialogue;
+        StartCoroutine("OnTypingText");
     }
 
     public void SetActiveObjects(Speaker speaker, bool visible)
@@ -103,6 +128,28 @@ public class DialogSystem : MonoBehaviour
         Color color = speaker.imageCharacter.color;
         color.a = visible == true ? 1 : 0.2f;
         speaker.imageCharacter.color = color;
+    }
+
+    private IEnumerator OnTypingText()
+    {
+        int index = 0;
+
+        isTypingEffect = true;
+
+        // 텍스트를 한글자씩 타이핑치듯 재생
+        while (index <= dialogs[curDialogIndex].dialogue.Length)
+        {
+            speakers[curSpeakerIndex].textDialogue.text = dialogs[curDialogIndex].dialogue.Substring(0, index);
+
+            index++;
+
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        isTypingEffect = false;
+
+        // 대사가 완료되었을 때 출력되는 커서 활성화
+        speakers[curSpeakerIndex].objectArrow.SetActive(true);
     }
 
     [System.Serializable]
