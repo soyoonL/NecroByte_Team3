@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour
     //재장전
     bool Reloading;
 
+    //중력 추가
+    float yVelocity = 0f;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -153,7 +156,20 @@ public class PlayerController : MonoBehaviour
         float v = vAxis;
         Vector3 moveVec = new Vector3(h, 0, v).normalized;
 
-        controller.Move(moveVec * currentSpeed * Time.deltaTime);
+        // 중력 변수 추가
+        if (!controller.isGrounded)
+        {
+            yVelocity += Physics.gravity.y * Time.deltaTime; //땅에 닿아있지 않을 때 중력적용
+        }
+        else
+        {
+            // 땅에 닿으면 속도를 리셋
+            yVelocity = -1f;
+        }
+
+        //최종 이동 벡터 계산
+        Vector3 finalMove = (moveVec * currentSpeed) + new Vector3(0, yVelocity, 0);
+        controller.Move(finalMove * Time.deltaTime);
 
         if(isSwap || Reloading ) 
             moveVec = Vector3.zero;  //상호작용할 때 움직임X
