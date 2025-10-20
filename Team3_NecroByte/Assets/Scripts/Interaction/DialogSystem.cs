@@ -22,13 +22,22 @@ public class DialogSystem : MonoBehaviour
         SetUp(); 
     }
 
+    public void OnEnable()
+    {
+        isAutoStart = true;
+        isFirst = true;
+        curDialogIndex = -1;
+        curSpeakerIndex = 0;
+        SetUp();
+    }
+
     public void SetUp()
     {
         for ( int i = 0; i<speakers.Length; ++i)
         {
             SetActiveObjects(speakers[i], false);
             speakers[i].imageCharacter.gameObject.SetActive(true);
-            Debug.Log("¾Æ´Ï¾Æ´Ï¾Æ¤ÑÇÏÆR´ÏÇÏ");
+            
         }
     }
 
