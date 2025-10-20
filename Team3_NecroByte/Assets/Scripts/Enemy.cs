@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int maxHealth;
-    public int curHealth;
+    public float maxHealth;
+    public float curHealth;
 
     Rigidbody rigid;
     BoxCollider boxCollider;
