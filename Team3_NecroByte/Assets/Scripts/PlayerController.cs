@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     bool fiveKey; //5번 키
     bool aKey; // 공격 키
     bool lKey; //재장전 키
+    bool cKey; // 카메라 회전 키
 
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
@@ -64,12 +65,17 @@ public class PlayerController : MonoBehaviour
     public int Bullet;
     public int maxBullet;
 
+    //마우스 회전
+    [Header("카메라 회전")]
+    public Camera followCamera;
+
     //재장전
     bool Reloading;
 
     //중력 추가
     float yVelocity = 0f;
 
+   
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -88,6 +94,7 @@ public class PlayerController : MonoBehaviour
         Swap();
         Attack();
         Reload();
+        Turn();
 
     }
 
@@ -104,6 +111,7 @@ public class PlayerController : MonoBehaviour
         fiveKey = Input.GetKeyDown(KeyCode.Alpha5);
         aKey = Input.GetMouseButtonDown(0);
         lKey = Input.GetMouseButtonDown(1);
+        cKey = Input.GetMouseButtonDown(2);
     }
 
     void Attack()
@@ -324,5 +332,25 @@ public class PlayerController : MonoBehaviour
     void SwapOut()
     {
         isSwap = false;
+    }
+
+    void Turn()
+    {
+        // 키보드에 의한 회전
+        transform.LookAt(transform.position + moveVec);
+
+        // 마우스에 의한 회전
+        if (cKey)
+        {
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                Vector3 nextVec = rayHit.point - transform.position;
+                nextVec.y= 0;   
+                transform.LookAt(transform.position + nextVec);
+            }
+        }
+       
     }
 }
