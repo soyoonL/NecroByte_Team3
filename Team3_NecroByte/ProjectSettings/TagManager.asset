@@ -22,9 +22,9 @@ TagManager:
   - Enemy
   - EnemyDead
   - Interactable
-  - 
-  - 
-  - 
+  - Player
+  - PlayerBullet
+  - BulletCase
   - 
   - 
   - 
