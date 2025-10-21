@@ -27,6 +27,7 @@ public class InteractableObject : MonoBehaviour
     public GameObject dialogPage2;
 
     DialogSystem diaSystem;
+    
 
 
     public enum InteractionType
@@ -91,7 +92,6 @@ public class InteractableObject : MonoBehaviour
         {
             
             case InteractionType.Item:
-                Debug.Log(11111111);
                 CollectItem();    
                 break;  
             case InteractionType.Machine:
@@ -116,8 +116,32 @@ public class InteractableObject : MonoBehaviour
 
     protected virtual void CollectItem() //아이템 수집 함수
     {
-        
         Destroy(gameObject);    // 아이템 파괴
+
+        Item item = GetComponent<Item>();
+        GameObject player = GameObject.Find("Player");
+        PlayerController pc= player.GetComponent<PlayerController>();
+
+        switch (item.type)
+        {
+            case Item.Type.Coin:
+                pc.chip += item.value;
+                if(pc.chip > pc.maxChip)
+                    pc.chip = pc.maxChip;
+                break;
+            case Item.Type.HP:
+                pc.health += item.value;
+                if(pc.health > pc.maxHealth)    
+                    pc.health = pc.maxHealth;
+                break;
+            case Item.Type.Grenade:
+                pc.hasthrow += item.value;
+                if(pc.hasthrow > pc.MaxHasThrow)
+                    pc.hasthrow = pc.MaxHasThrow;
+                break;
+
+        }
+
         
     }
 

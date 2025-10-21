@@ -21,6 +21,16 @@ public class PlayerController : MonoBehaviour
     bool tKey; //EMP 던지는 키
     bool cKey; // 카메라 회전 키
 
+    [Header("플레이어 기본 설정")]
+    public float health;
+    public int chip;
+    public int Bullet;
+    public int hasthrow;
+    public float maxHealth;
+    public int maxChip;
+    public int maxBullet;
+    public int MaxHasThrow;
+
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
     public float runSpeed = 6.0f;
@@ -62,10 +72,6 @@ public class PlayerController : MonoBehaviour
     //공격
     float fireDelay;
     bool isFireReady;
-
-    [Header("총알 수")]
-    public int Bullet;
-    public int maxBullet;
 
     //마우스 회전
     [Header("카메라 회전")]
