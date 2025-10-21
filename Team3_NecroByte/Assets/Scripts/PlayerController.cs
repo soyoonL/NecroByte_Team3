@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     bool fiveKey; //5번 키
     bool aKey; // 공격 키
     bool lKey; //재장전 키
+    bool tKey; //EMP 던지는 키
     bool cKey; // 카메라 회전 키
 
     [Header("이동설정")]
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     [Header("무기 저장")]
     public GameObject[] weapons;
     public bool[] hasWeapons;
+    public GameObject throwObj;
 
     //아이템 저장
     GameObject nearObject;
@@ -95,6 +97,7 @@ public class PlayerController : MonoBehaviour
         Attack();
         Reload();
         Turn();
+        
 
     }
 
@@ -110,7 +113,8 @@ public class PlayerController : MonoBehaviour
         fourKey = Input.GetKeyDown(KeyCode.Alpha4);
         fiveKey = Input.GetKeyDown(KeyCode.Alpha5);
         aKey = Input.GetMouseButtonDown(0);
-        lKey = Input.GetMouseButtonDown(1);
+        lKey = Input.GetKeyDown(KeyCode.Q);
+        tKey = Input.GetMouseButtonDown(1);
         cKey = Input.GetMouseButtonDown(2);
     }
 
@@ -353,4 +357,6 @@ public class PlayerController : MonoBehaviour
         }
        
     }
+
+   
 }

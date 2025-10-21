@@ -1864,6 +1864,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6407943377665575728, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
+      propertyPath: throwObj
+      value: 
+      objectReference: {fileID: 4855816215839248218, guid: 0a8d242bf29a6b54da96b15775a7bdd8,
+        type: 3}
+    - target: {fileID: 6407943377665575728, guid: f541d158b697ae24782d8d757f579337,
+        type: 3}
       propertyPath: followCamera
       value: 
       objectReference: {fileID: 330585545}
