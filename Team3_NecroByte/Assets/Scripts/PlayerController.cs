@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -72,6 +70,7 @@ public class PlayerController : MonoBehaviour
     //공격
     float fireDelay;
     bool isFireReady;
+    public bool isAttacking;
 
     //마우스 회전
     [Header("카메라 회전")]
@@ -128,7 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         if (equipWeapon == null)
             return;
-
+       
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
@@ -189,8 +188,11 @@ public class PlayerController : MonoBehaviour
         Vector3 finalMove = (moveVec * currentSpeed) + new Vector3(0, yVelocity, 0);
         controller.Move(finalMove * Time.deltaTime);
 
-        if(isSwap || Reloading ) 
+        if(isSwap || Reloading || isAttacking)
+        {
             moveVec = Vector3.zero;  //상호작용할 때 움직임X
+            
+        }
 
         if (isDodging)
         {
@@ -364,5 +366,18 @@ public class PlayerController : MonoBehaviour
        
     }
 
-   
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<SceneObject>() != null)
+        {
+            string info = other.GetComponent<SceneObject>().objectInfo;
+            if (info.StartsWith("scene"))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(info);
+            }
+        }
+    }
+
+
+
 }
