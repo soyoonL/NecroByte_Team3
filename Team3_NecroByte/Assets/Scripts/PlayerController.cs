@@ -1,4 +1,5 @@
 
+using TMPro;
 using UnityEngine;
 
 
@@ -76,17 +77,23 @@ public class PlayerController : MonoBehaviour
     [Header("카메라 회전")]
     public Camera followCamera;
 
+    [Header("UI표시")]
+    public TMP_Text healthText;
+    public TMP_Text coinText;
+
     //재장전
     bool Reloading;
 
     //중력 추가
     float yVelocity = 0f;
 
+
    
     void Start()
     {
+        
         controller = GetComponent<CharacterController>();
-
+        UpdateUI();
     }
 
 
@@ -121,6 +128,12 @@ public class PlayerController : MonoBehaviour
         lKey = Input.GetKeyDown(KeyCode.Q);
         tKey = Input.GetMouseButtonDown(1);
         cKey = Input.GetMouseButtonDown(2);
+    }
+
+    public void UpdateUI()
+    {
+        healthText.text = $"{health} / {maxHealth}";
+        coinText.text = $"Chip : {chip}";
     }
 
     void Attack()
