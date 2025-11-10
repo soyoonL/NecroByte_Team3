@@ -341,13 +341,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1fcb442865499c4c99c9197f5ff20ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
+  chip: 0
+  Bullet: 7
+  hasthrow: 0
+  maxHealth: 0
+  maxChip: 0
+  maxBullet: 0
+  MaxHasThrow: 0
   walkSpeed: 5
   runSpeed: 10
   rotationSpeed: 5
   animator: {fileID: 7654535079916261339}
-  dodgeDistance: 3
   dodgeDuration: 0.4
-  dodgeCooldown: 0.5
+  dodgePower: 10
+  dodgeCooldown: 2
+  dodgeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0043525696
+      value: 1.0062866
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0010986
+      value: 0.003200531
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   weapons:
   - {fileID: 6781073085377744933}
   - {fileID: 4383488086893585843}
@@ -355,8 +387,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 7955322019431680192}
   hasWeapons: 0000000000
-  Bullet: 7
-  maxBullet: 0
+  throwObj: {fileID: 0}
+  isAttacking: 0
+  followCamera: {fileID: 0}
+  healthText: {fileID: 0}
+  coinText: {fileID: 0}
 --- !u!143 &2539929612222740324
 CharacterController:
   m_ObjectHideFlags: 0

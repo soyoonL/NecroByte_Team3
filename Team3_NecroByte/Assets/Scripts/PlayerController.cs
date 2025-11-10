@@ -1,4 +1,5 @@
 
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -6,19 +7,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //움직임 관련
-    float hAxis; //좌우 방향키
-    float vAxis; //상하 방햐키
-    bool rKey; //달리기 키
-    bool dKey; //회피 키
-    bool eKey; //상호작용 키
-    bool oneKey; //1번 키
-    bool twoKey; //2번 키
+    float hAxis;  //좌우 방향키
+    float vAxis;  //상하 방햐키
+    bool rKey;    //달리기 키
+    bool dKey;    //회피 키
+    bool eKey;    //상호작용 키
+    bool oneKey;  //1번 키
+    bool twoKey;  //2번 키
     bool fourKey; //4번 키
     bool fiveKey; //5번 키
-    bool aKey; // 공격 키
-    bool lKey; //재장전 키
-    bool tKey; //EMP 던지는 키
-    bool cKey; // 카메라 회전 키
+    bool aKey;    // 공격 키
+    bool lKey;    //재장전 키
+    bool tKey;    //EMP 던지는 키
 
     [Header("플레이어 기본 설정")]
     public float health;
@@ -33,26 +33,25 @@ public class PlayerController : MonoBehaviour
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
     public float runSpeed = 6.0f;
-    public float rotationSpeed = 10.0f;
-
+    public float rotationSpeed = 15f;
     private float currentSpeed;
 
     [Header("커포넌트")]
     public Animator animator;
-
+    public Camera cam;
     private CharacterController controller;
-    private Camera playerCamera;
 
     [Header("회피 설정")]
-    public float dodgeDistance = 2.5f;      // 이동 거리
-    public float dodgeDuration = 0.25f;     // 이동 시간 (짧을수록 순간 이동 느낌)
-    public float dodgeCooldown = 0.5f;
+    public float dodgeDuration = 0.2f;          // 회피 전체 시간
+    public float dodgePower = 70f;              // 최대 힘
+    public float dodgeCooldown = 0.4f;          
+    public AnimationCurve dodgeCurve;           // 속도 커브
 
-    private bool isDodging = false;
-    private float lastDodgeTime = 0f;
-    private Vector3 dodgeStartPos;
-    private Vector3 dodgeEndPos;
-    private float dodgeTimer;
+    public bool isDodgingNow = false;
+    bool isDodging = false;
+    bool dodgeOnCooldown =false;
+    float dodgeTimer = 0f;
+    Vector3 dodgeDirection;
 
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -87,15 +86,11 @@ public class PlayerController : MonoBehaviour
     //중력 추가
     float yVelocity = 0f;
 
-
-   
     void Start()
-    {
-        
+    { 
         controller = GetComponent<CharacterController>();
         UpdateUI();
     }
-
 
     void Update()
     {
@@ -103,14 +98,13 @@ public class PlayerController : MonoBehaviour
         GetInput();
         HandleMovement();
         UpdateAnimator();
-        HandleDodge();
+        Dodge();
         Interation();
         Swap();
         Attack();
         Reload();
         Turn();
         
-
     }
 
     void GetInput()
@@ -127,7 +121,115 @@ public class PlayerController : MonoBehaviour
         aKey = Input.GetMouseButtonDown(0);
         lKey = Input.GetKeyDown(KeyCode.Q);
         tKey = Input.GetMouseButtonDown(1);
-        cKey = Input.GetMouseButtonDown(2);
+    }
+
+    void HandleMovement()
+    {
+        float h = hAxis;
+        float v = vAxis;
+
+        // 카메라 기준 방향
+        Vector3 camForward = cam.transform.forward;
+        Vector3 camRight = cam.transform.right;
+
+        camForward.y = 0;
+        camRight.y = 0;
+
+        camForward.Normalize();
+        camRight.Normalize();
+
+        // 카메라 기준 이동 벡터
+        Vector3 moveVec = (camForward * v + camRight * h).normalized;
+
+        // 회피 중이면 회피 방향 우선
+        if (isDodging)
+        {
+            moveVec = dodgeVec;
+        }
+
+        // 중력 처리
+        if (!controller.isGrounded)
+            yVelocity += Physics.gravity.y * Time.deltaTime;
+        else
+            yVelocity = -1f;
+
+        // 최종 이동 속도 적용
+        float speed = rKey ? runSpeed : walkSpeed;
+        if (h == 0 && v == 0) speed = 0;
+
+        currentSpeed = speed;
+
+        Vector3 finalMove = moveVec * currentSpeed + new Vector3(0, yVelocity, 0);
+        controller.Move(finalMove * Time.deltaTime);
+
+        // 무기 교체, 공격 중 움직임 막기
+        if (isSwap || Reloading || isAttacking)
+            moveVec = Vector3.zero;
+    }
+
+    void Turn()
+    {
+        if (cam == null) return;
+
+        // 마우스가 향하는 곳을 레이캐스트
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+        // 캐릭터가 서 있는 평면
+        Plane plane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0));
+
+        float enter;
+
+        if (plane.Raycast(ray, out enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
+
+            // 방향 계산
+            Vector3 direction = hitPoint - transform.position;
+            direction.y = 0;
+
+            // 너무 가까우면 방향이 튀므로 보정
+            if (direction.sqrMagnitude < 0.05f)
+                return;
+
+            // 실제 회전
+            Quaternion targetRot = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    void Dodge()
+    {
+        if (!isDodging && !dodgeOnCooldown && dKey)
+        {
+            dodgeDirection = transform.forward.normalized;
+            isDodging = true;
+            isDodgingNow = true;
+            dodgeTimer = 0f;
+            StartCoroutine(DodgeCooldownRoutine());
+        }
+
+        if (isDodging)
+        {
+            dodgeTimer += Time.deltaTime;
+            float t = dodgeTimer / dodgeDuration;
+
+            float power = dodgeCurve.Evaluate(t) * dodgePower;
+
+            transform.position += dodgeDirection * power * Time.deltaTime;
+
+            if (t >= 1f)
+            {
+                isDodging = false;
+                isDodgingNow = false;
+            }
+        }
+    }
+
+    IEnumerator DodgeCooldownRoutine()
+    {
+        dodgeOnCooldown = true;
+        yield return new WaitForSeconds(dodgeCooldown);
+        dodgeOnCooldown = false;
     }
 
     public void UpdateUI()
@@ -179,109 +281,10 @@ public class PlayerController : MonoBehaviour
         Bullet -= reBullet;
     }
 
-    void HandleMovement()
-    {
-
-        float h = hAxis;
-        float v = vAxis;
-        Vector3 moveVec = new Vector3(h, 0, v).normalized;
-
-        // 중력 변수 추가
-        if (!controller.isGrounded)
-        {
-            yVelocity += Physics.gravity.y * Time.deltaTime; //땅에 닿아있지 않을 때 중력적용
-        }
-        else
-        {
-            // 땅에 닿으면 속도를 리셋
-            yVelocity = -1f;
-        }
-
-        //최종 이동 벡터 계산
-        Vector3 finalMove = (moveVec * currentSpeed) + new Vector3(0, yVelocity, 0);
-        controller.Move(finalMove * Time.deltaTime);
-
-        if(isSwap || Reloading || isAttacking)
-        {
-            moveVec = Vector3.zero;  //상호작용할 때 움직임X
-            
-        }
-
-        if (isDodging)
-        {
-            moveVec = dodgeVec;
-        }
-
-        if (h != 0 || v != 0)
-        {
-
-
-            if (rKey)
-            {
-                currentSpeed = runSpeed;
-            }
-            else
-            {
-                currentSpeed = walkSpeed;
-            }
-
-
-        }
-        else
-        {
-            currentSpeed = 0;
-        }
-
-        if (moveVec != Vector3.zero)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveVec), rotationSpeed * Time.deltaTime);  //탑뷰에서도 자연스럽게 방향전환
-        }
-    }
-
     void UpdateAnimator()
     {
         float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
         animator.SetFloat("speed", animatorSpeed);
-
-    }
-
-    void HandleDodge()
-    {
-
-        if (dKey && !isDodging && Time.time - lastDodgeTime >= dodgeCooldown&&!isSwap)
-        {
-            isDodging = true;
-            lastDodgeTime = Time.time;
-            dodgeTimer = 0f;
-            currentSpeed *= 2f;
-            
-            animator.ResetTrigger("dodgeTrigger");
-            animator.SetTrigger("dodgeTrigger");
-
-            // 시작/끝 위치 계산
-            dodgeStartPos = transform.position;
-            dodgeEndPos = transform.position + transform.forward * dodgeDistance;
-        }
-
-        // 회피 중이면 부드럽게 이동
-        if (isDodging)
-        {
-            dodgeTimer += Time.deltaTime;
-            float t = dodgeTimer / dodgeDuration;
-            if (t > 1f) t = 1f;
-
-            
-            float smoothT = 1f - Mathf.Pow(1f - t, 3f);
-            Vector3 newPos = Vector3.Lerp(dodgeStartPos, dodgeEndPos, smoothT);
-            controller.Move(newPos - transform.position);
-
-            
-            if (t >= 1f)
-            {
-                isDodging = false;
-            }
-        }
-
 
     }
 
@@ -357,26 +360,6 @@ public class PlayerController : MonoBehaviour
     void SwapOut()
     {
         isSwap = false;
-    }
-
-    void Turn()
-    {
-        // 키보드에 의한 회전
-        transform.LookAt(transform.position + moveVec);
-
-        // 마우스에 의한 회전
-        if (cKey)
-        {
-            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayHit;
-            if (Physics.Raycast(ray, out rayHit, 100))
-            {
-                Vector3 nextVec = rayHit.point - transform.position;
-                nextVec.y= 0;   
-                transform.LookAt(transform.position + nextVec);
-            }
-        }
-       
     }
 
     void OnTriggerEnter(Collider other)
