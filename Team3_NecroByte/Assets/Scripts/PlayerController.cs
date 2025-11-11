@@ -7,28 +7,29 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //움직임 관련
-    float hAxis;  //좌우 방향키
-    float vAxis;  //상하 방햐키
-    bool rKey;    //달리기 키
-    bool dKey;    //회피 키
-    bool eKey;    //상호작용 키
-    bool oneKey;  //1번 키
-    bool twoKey;  //2번 키
-    bool fourKey; //4번 키
-    bool fiveKey; //5번 키
-    bool aKey;    // 공격 키
-    bool lKey;    //재장전 키
-    bool tKey;    //EMP 던지는 키
+    float hAxis;   //좌우 방향키
+    float vAxis;   //상하 방햐키
+    bool rKey;     //달리기 키
+    bool dKey;     //회피 키
+    bool eKey;     //상호작용 키
+    bool oneKey;   //1번 키
+    bool twoKey;   //2번 키
+    bool threeKey; //3번 키
+    bool fourKey;  //4번 키
+    bool fiveKey;  //5번 키
+    bool aKey;     // 공격 키
+    bool lKey;     //재장전 키
+    bool tKey;     //EMP 던지는 키
 
     [Header("플레이어 기본 설정")]
     public float health;
     public int chip;
-    public int Bullet;
-    public int hasthrow;
+    public int Ammo;
+    public int hasGrendes;
     public float maxHealth;
     public int maxChip;
-    public int maxBullet;
-    public int MaxHasThrow;
+    public int maxAmmo;
+    public int MaxHasGrendes;
 
     [Header("이동설정")]
     public float walkSpeed = 3.0f;
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
         eKey = Input.GetKeyDown(KeyCode.E);
         oneKey = Input.GetKeyDown(KeyCode.Alpha1);
         twoKey = Input.GetKeyDown(KeyCode.Alpha2);
+        threeKey = Input.GetKeyDown(KeyCode.Alpha3);
         fourKey = Input.GetKeyDown(KeyCode.Alpha4);
         fiveKey = Input.GetKeyDown(KeyCode.Alpha5);
         aKey = Input.GetMouseButtonDown(0);
@@ -248,6 +250,8 @@ public class PlayerController : MonoBehaviour
             return;
         if (twoKey && (!hasWeapons[1] || equipWeaponIndex == 1))
             return;
+        if (threeKey && (!hasWeapons[2] || equipWeaponIndex == 2))
+            return;
         if (fourKey && (!hasWeapons[3] || equipWeaponIndex == 3))
             return;
         if (fiveKey && (!hasWeapons[4] || equipWeaponIndex == 4))
@@ -256,11 +260,12 @@ public class PlayerController : MonoBehaviour
         int weaponIndex = -1;
         if (oneKey) weaponIndex = 0;
         if (twoKey) weaponIndex = 1;
+        if (threeKey) weaponIndex = 2;
         if (fourKey) weaponIndex = 3;
         if (fiveKey) weaponIndex = 4;
 
 
-        if (oneKey || twoKey || fourKey || fiveKey && !isDodging)
+        if (oneKey || twoKey || threeKey || fourKey || fiveKey && !isDodging)
         {
             if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
 
@@ -310,7 +315,7 @@ public class PlayerController : MonoBehaviour
 
         if (equipWeapon.type == Weapon.Type.Melee)
             return;
-        if (Bullet == 0)
+        if (Ammo == 0)
             return;
 
         if(lKey && !isDodging && !isSwap && isFireReady)
@@ -324,10 +329,10 @@ public class PlayerController : MonoBehaviour
 
     void ReloadOut()
     {
-        int reBullet = Bullet < equipWeapon.maxBullet ? Bullet : equipWeapon.maxBullet;
+        int reBullet = Ammo < equipWeapon.maxBullet ? Ammo : equipWeapon.maxBullet;
         equipWeapon.curBullet = reBullet;
         Reloading = false;
-        Bullet -= reBullet;
+        Ammo -= reBullet;
     }
 
     private void OnTriggerStay(Collider other)

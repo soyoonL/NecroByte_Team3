@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class InteractionSystem : MonoBehaviour
 {
     [Header("상호작용 설정")]
-    public float interactionRange = 2.0f; //상호작용 범위
-    public LayerMask interactionLayerMask = 1; //상호작용할 레이어
-    public KeyCode interactionKey = KeyCode.E; //상호작용 키
+    public float interactionRange = 2.0f;          // 상호작용 범위
+    public LayerMask interactionLayerMask = 1;     // 상호작용할 레이어
+    public KeyCode interactionKey = KeyCode.E;     // 상호작용 키
 
     [Header("UI 설정")]
-    public Text interactionText; //상호작용 UI 텍스트
-    public GameObject interactionUI; //상호작용 UI 패널
+    public Text interactionText;                   // 상호작용 UI 텍스트
+    public GameObject interactionUI;               // 상호작용 UI 패널
 
     private Transform playerTransform; 
-    private InteractableObject curInteractiable;  // 감지된 오브젝트 담는 클래스
+    private InteractableObject curInteractiable;   // 감지된 오브젝트 담는 클래스
 
     private void Start()
     {
@@ -31,7 +31,7 @@ public class InteractionSystem : MonoBehaviour
 
     void HandleInteractionInput()
     {
-        if(curInteractiable != null && Input.GetKeyDown(interactionKey)) //참조할 오브젝트가 있고 e키를 누르면 클래스에 있는 Interact 함수를 실행
+        if(curInteractiable != null && Input.GetKeyDown(interactionKey)) // 참조할 오브젝트가 있고 e키를 누르면 클래스에 있는 Interact 함수를 실행
         {
             curInteractiable.Interact();
            
@@ -41,12 +41,12 @@ public class InteractionSystem : MonoBehaviour
 
     void ShowInteractionUI(string text)
     {
-        if (interactionUI != null)      //UI 창이 존재하면 화면에 표시
+        if (interactionUI != null)           //UI 창이 존재하면 화면에 표시
         {
             interactionUI.SetActive(true); 
         }
 
-        if (interactionText != null)   //텍스트가 존재하면 문자열로 텍스트 변경
+        if (interactionText != null)         //텍스트가 존재하면 문자열로 텍스트 변경
         {
             interactionText.text = text;
         }
@@ -54,7 +54,7 @@ public class InteractionSystem : MonoBehaviour
 
     void HideInteractionUI() 
     {
-        if (interactionUI != null)  //UI창이 존재하면 창을 닫음
+        if (interactionUI != null)           //UI창이 존재하면 창을 닫음
         {
             interactionUI.SetActive(false);
         }
@@ -68,7 +68,7 @@ public class InteractionSystem : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapSphere(checkPosition, interactionRange, interactionLayerMask);
 
         InteractableObject closestInteractable = null;   //가장 가까운 물체 선언
-        float closestDistance = float.MaxValue;  //거리 설정
+        float closestDistance = float.MaxValue;          //거리 설정
 
         foreach (Collider collider in hitColliders)
         {
