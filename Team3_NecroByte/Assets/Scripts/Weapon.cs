@@ -15,6 +15,7 @@ public class Weapon : MonoBehaviour
     public BoxCollider meleeArea;
     public TrailRenderer trailEffect;
     [Header("원거리공격")]
+    public Camera cam;
     public Transform bulletPos;
     public GameObject bullet;
     public Transform bulletCasePos;
@@ -53,7 +54,21 @@ public class Weapon : MonoBehaviour
         //총알 발사
         GameObject instantBullet = Instantiate (bullet, bulletPos.position, bulletPos.rotation);
         Rigidbody bulletRigid = instantBullet.GetComponent<Rigidbody>();
-        bulletRigid.velocity = bulletPos.forward * 50;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 shootDir;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        {
+            shootDir = (hit.point - bulletPos.position).normalized;
+        }
+        else
+        {
+            shootDir = ray.direction;
+        }
+
+        
+        bulletRigid.velocity = shootDir * 50f;
+
 
         yield return null;
         //탄피 배출
