@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("회피 설정")]
     public float dodgeDuration = 0.2f;          // 회피 전체 시간
-    public float dodgePower = 70f;              // 최대 힘
+    public float dodgePower = 10f;              // 최대 힘
     public float dodgeCooldown = 0.4f;          
     public AnimationCurve dodgeCurve;           // 속도 커브
 
@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
     [Header("UI표시")]
     public TMP_Text healthText;
     public TMP_Text coinText;
+    public RectTransform crosshair;
 
     //재장전
     bool Reloading;
@@ -87,10 +88,14 @@ public class PlayerController : MonoBehaviour
     { 
         controller = GetComponent<CharacterController>();
         UpdateUI();
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     void Update()
     {
+        crosshair.position = Input.mousePosition;
 
         GetInput();
         HandleMovement();
@@ -100,8 +105,7 @@ public class PlayerController : MonoBehaviour
         Swap();
         Attack();
         Reload();
-        Turn();
-        
+        TurnWithCrosshair();
     }
 
     void GetInput()
@@ -170,28 +174,26 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void Turn()
+    void TurnWithCrosshair()
     {
         if (cam == null) return;
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);                          // 마우스가 향하는 곳을 레이캐스트
-
-        Plane plane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0)); // 캐릭터가 서 있는 평면
+        Ray ray = cam.ScreenPointToRay(crosshair.position);
+        Plane plane = new Plane(Vector3.up, transform.position);
 
         float enter;
-
         if (plane.Raycast(ray, out enter))
         {
             Vector3 hitPoint = ray.GetPoint(enter);
 
-            Vector3 direction = hitPoint - transform.position;                        // 방향 계산
-            direction.y = 0;
+            Vector3 dir = hitPoint - transform.position;
+            dir.y = 0;
 
-            if (direction.sqrMagnitude < 0.05f)                                       // 너무 가까우면 방향이 튀므로 보정
-                return;
-
-            Quaternion targetRot = Quaternion.LookRotation(direction);                  
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime); // 실제 회전
+            if (dir.sqrMagnitude > 0.01f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+            }
         }
     }
 
