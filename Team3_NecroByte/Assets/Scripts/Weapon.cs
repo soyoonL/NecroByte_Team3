@@ -8,12 +8,12 @@ public class Weapon : MonoBehaviour
     public enum Type { Melee, Range }
     public Type type;
     public int damage;
-    public float rate;
+    public float rate;                   // 공격속도
     public int maxBullet;
     public int curBullet;
     [Header("근접공격")]
-    public BoxCollider meleeArea;
-    public TrailRenderer trailEffect;
+    public BoxCollider meleeArea;        //공격범위
+    public TrailRenderer trailEffect;    //휘두를 때의 효과
     [Header("원거리공격")]
     public Camera cam;
     public Transform bulletPos;

@@ -64,12 +64,10 @@ public class PlayerController : MonoBehaviour
     bool isSwap;
     int equipWeaponIndex = -1;
 
-    //공격
+    // 근접 공격
     float fireDelay;
-    bool isFireReady;
-    public bool isAttacking;
+    bool isFireReady = true;
 
-    //마우스 회전
     [Header("카메라 회전")]
     public Camera followCamera;
 
@@ -162,8 +160,8 @@ public class PlayerController : MonoBehaviour
         Vector3 finalMove = moveVec * currentSpeed + new Vector3(0, yVelocity, 0);
         controller.Move(finalMove * Time.deltaTime);
 
-        // 무기 교체 · 공격 중 이동 정지
-        if (isSwap || Reloading || isAttacking)
+        // 무기 교체& 공격 중 이동 정지
+        if (isSwap || Reloading || !isFireReady)
             moveVec = Vector3.zero;
     }
 
