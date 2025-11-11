@@ -126,36 +126,40 @@ public class PlayerController : MonoBehaviour
         float h = hAxis;
         float v = vAxis;
 
-        Vector3 camForward = cam.transform.forward;                                    // 카메라 기준 방향
-        Vector3 camRight = cam.transform.right;
+       // 플레이어가 바라보는 방향 기준 이동
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
 
-        camForward.y = 0;
-        camRight.y = 0;
+        forward.y = 0;
+        right.y = 0;
 
-        camForward.Normalize();
-        camRight.Normalize();
+        forward.Normalize();
+        right.Normalize();
 
-        Vector3 moveVec = (camForward * v + camRight * h).normalized;                  // 카메라 기준 이동 벡터
+        Vector3 moveVec = (forward * v) + (right * h);
+        moveVec = moveVec.normalized;
 
-        if (isDodging)                                                                 // 회피 중이면 회피 방향 우선
+        // 회피 중이면 회피 벡터 우선
+        if (isDodging)
         {
             moveVec = dodgeVec;
         }
 
-        if (!controller.isGrounded)                                                    // 중력 처리
+        // 중력 처리
+        if (!controller.isGrounded)
             yVelocity += Physics.gravity.y * Time.deltaTime;
         else
             yVelocity = -1f;
 
-        float speed = rKey ? runSpeed : walkSpeed;                                     // 최종 이동 속도 적용
-        if (h == 0 && v == 0) speed = 0;
-
+        // 속도 적용
+        float speed = (h != 0 || v != 0) ? (rKey ? runSpeed : walkSpeed) : 0;
         currentSpeed = speed;
 
         Vector3 finalMove = moveVec * currentSpeed + new Vector3(0, yVelocity, 0);
         controller.Move(finalMove * Time.deltaTime);
 
-        if (isSwap || Reloading || isAttacking)                                        // 무기 교체, 공격 중 움직임 막기
+        // 무기 교체 · 공격 중 이동 정지
+        if (isSwap || Reloading || isAttacking)
             moveVec = Vector3.zero;
     }
 
