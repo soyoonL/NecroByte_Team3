@@ -52,16 +52,12 @@ public class PlayerController : MonoBehaviour
     bool dodgeOnCooldown =false;
     float dodgeTimer = 0f;
     Vector3 dodgeDirection;
-
-    Vector3 moveVec;
     Vector3 dodgeVec;
   
     [Header("무기 저장")]
     public GameObject[] weapons;
     public bool[] hasWeapons;
     public GameObject throwObj;
-
-    //아이템 저장
     GameObject nearObject;
     Weapon equipWeapon;
     bool isSwap;
@@ -128,8 +124,7 @@ public class PlayerController : MonoBehaviour
         float h = hAxis;
         float v = vAxis;
 
-        // 카메라 기준 방향
-        Vector3 camForward = cam.transform.forward;
+        Vector3 camForward = cam.transform.forward;                                    // 카메라 기준 방향
         Vector3 camRight = cam.transform.right;
 
         camForward.y = 0;
@@ -138,23 +133,19 @@ public class PlayerController : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
 
-        // 카메라 기준 이동 벡터
-        Vector3 moveVec = (camForward * v + camRight * h).normalized;
+        Vector3 moveVec = (camForward * v + camRight * h).normalized;                  // 카메라 기준 이동 벡터
 
-        // 회피 중이면 회피 방향 우선
-        if (isDodging)
+        if (isDodging)                                                                 // 회피 중이면 회피 방향 우선
         {
             moveVec = dodgeVec;
         }
 
-        // 중력 처리
-        if (!controller.isGrounded)
+        if (!controller.isGrounded)                                                    // 중력 처리
             yVelocity += Physics.gravity.y * Time.deltaTime;
         else
             yVelocity = -1f;
 
-        // 최종 이동 속도 적용
-        float speed = rKey ? runSpeed : walkSpeed;
+        float speed = rKey ? runSpeed : walkSpeed;                                     // 최종 이동 속도 적용
         if (h == 0 && v == 0) speed = 0;
 
         currentSpeed = speed;
@@ -162,20 +153,24 @@ public class PlayerController : MonoBehaviour
         Vector3 finalMove = moveVec * currentSpeed + new Vector3(0, yVelocity, 0);
         controller.Move(finalMove * Time.deltaTime);
 
-        // 무기 교체, 공격 중 움직임 막기
-        if (isSwap || Reloading || isAttacking)
+        if (isSwap || Reloading || isAttacking)                                        // 무기 교체, 공격 중 움직임 막기
             moveVec = Vector3.zero;
+    }
+
+    void UpdateAnimator()
+    {
+        float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
+        animator.SetFloat("speed", animatorSpeed);
+
     }
 
     void Turn()
     {
         if (cam == null) return;
 
-        // 마우스가 향하는 곳을 레이캐스트
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);                          // 마우스가 향하는 곳을 레이캐스트
 
-        // 캐릭터가 서 있는 평면
-        Plane plane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0));
+        Plane plane = new Plane(Vector3.up, new Vector3(0, transform.position.y, 0)); // 캐릭터가 서 있는 평면
 
         float enter;
 
@@ -183,23 +178,20 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 hitPoint = ray.GetPoint(enter);
 
-            // 방향 계산
-            Vector3 direction = hitPoint - transform.position;
+            Vector3 direction = hitPoint - transform.position;                        // 방향 계산
             direction.y = 0;
 
-            // 너무 가까우면 방향이 튀므로 보정
-            if (direction.sqrMagnitude < 0.05f)
+            if (direction.sqrMagnitude < 0.05f)                                       // 너무 가까우면 방향이 튀므로 보정
                 return;
 
-            // 실제 회전
-            Quaternion targetRot = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
+            Quaternion targetRot = Quaternion.LookRotation(direction);                  
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime); // 실제 회전
         }
     }
 
     void Dodge()
     {
-        if (!isDodging && !dodgeOnCooldown && dKey)
+        if (!isDodging && !dodgeOnCooldown && !isSwap && dKey)
         {
             dodgeDirection = transform.forward.normalized;
             isDodging = true;
@@ -230,6 +222,63 @@ public class PlayerController : MonoBehaviour
         dodgeOnCooldown = true;
         yield return new WaitForSeconds(dodgeCooldown);
         dodgeOnCooldown = false;
+    }
+
+    void Interation()
+    {
+        if (eKey && nearObject != null && !isDodging && !isSwap)
+        {
+            if (nearObject.tag == "Weapon")
+            {
+                Item item = nearObject.GetComponent<Item>();
+                int weaponIndex = item.value;
+                hasWeapons[weaponIndex] = true;
+
+                Destroy(nearObject);
+
+                Debug.Log("아이템 획득!");
+            }
+        }
+    }
+
+    void Swap()
+    {
+
+        if (oneKey && (!hasWeapons[0] || equipWeaponIndex == 0))
+            return;
+        if (twoKey && (!hasWeapons[1] || equipWeaponIndex == 1))
+            return;
+        if (fourKey && (!hasWeapons[3] || equipWeaponIndex == 3))
+            return;
+        if (fiveKey && (!hasWeapons[4] || equipWeaponIndex == 4))
+            return;
+
+        int weaponIndex = -1;
+        if (oneKey) weaponIndex = 0;
+        if (twoKey) weaponIndex = 1;
+        if (fourKey) weaponIndex = 3;
+        if (fiveKey) weaponIndex = 4;
+
+
+        if (oneKey || twoKey || fourKey || fiveKey && !isDodging)
+        {
+            if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
+
+            equipWeaponIndex = weaponIndex;
+            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
+            Debug.Log("무기장착!");
+            equipWeapon.gameObject.SetActive(true);
+
+            animator.SetTrigger("swapTrigger");
+
+            isSwap = true;
+
+            Invoke("SwapOut", 0.4f);
+        }
+    }
+    void SwapOut()
+    {
+        isSwap = false;
     }
 
     public void UpdateUI()
@@ -281,85 +330,17 @@ public class PlayerController : MonoBehaviour
         Bullet -= reBullet;
     }
 
-    void UpdateAnimator()
-    {
-        float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
-        animator.SetFloat("speed", animatorSpeed);
-
-    }
-
     private void OnTriggerStay(Collider other)
     {
         if(other.tag=="Weapon")
             nearObject = other.gameObject;
 
-       
     }
 
     void OnTriggerExit(Collider other)
     {
         if (other.tag == "Weapon")
             nearObject = null;
-    }
-
-    void Interation()
-    {
-        if(eKey && nearObject != null)
-        {
-           
-            if (nearObject.tag == "Weapon")
-            {
-                Item item = nearObject.GetComponent<Item>();
-                int weaponIndex = item.value;
-                hasWeapons[weaponIndex] = true;
-
-                Destroy(nearObject);
-
-                Debug.Log("아이템 획득!");
-            }
-        }
-    }
-
-    void Swap()
-    {
-
-        if (oneKey && (!hasWeapons[0] || equipWeaponIndex == 0))
-            return;
-        if (twoKey && (!hasWeapons[1] || equipWeaponIndex == 1))
-            return;
-        if (fourKey && (!hasWeapons[3]|| equipWeaponIndex == 3))
-            return;
-        if (fiveKey && (!hasWeapons[4] || equipWeaponIndex == 4))
-            return;
-
-        int weaponIndex = -1;
-        if (oneKey) weaponIndex = 0;
-        if (twoKey) weaponIndex = 1;
-        if (fourKey) weaponIndex = 3;
-        if (fiveKey) weaponIndex = 4;
-       
-
-        if (oneKey || twoKey || fourKey || fiveKey && !isDodging )
-        {
-            if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
-
-            equipWeaponIndex = weaponIndex;
-            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
-            Debug.Log("무기장착!");
-            equipWeapon.gameObject.SetActive(true);
-
-            animator.SetTrigger("swapTrigger");
-
-            isSwap = true;
-
-            Invoke("SwapOut", 0.4f);
-        }
-        
-        
-    }
-    void SwapOut()
-    {
-        isSwap = false;
     }
 
     void OnTriggerEnter(Collider other)
