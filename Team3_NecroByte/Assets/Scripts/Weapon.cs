@@ -8,13 +8,14 @@ public class Weapon : MonoBehaviour
     public enum Type { Melee, Range }
     public Type type;
     public int damage;
-    public float rate;
+    public float rate;                   // 공격속도
     public int maxBullet;
     public int curBullet;
     [Header("근접공격")]
-    public BoxCollider meleeArea;
-    public TrailRenderer trailEffect;
+    public BoxCollider meleeArea;        //공격범위
+    public TrailRenderer trailEffect;    //휘두를 때의 효과
     [Header("원거리공격")]
+    public Camera cam;
     public Transform bulletPos;
     public GameObject bullet;
     public Transform bulletCasePos;
@@ -53,7 +54,21 @@ public class Weapon : MonoBehaviour
         //총알 발사
         GameObject instantBullet = Instantiate (bullet, bulletPos.position, bulletPos.rotation);
         Rigidbody bulletRigid = instantBullet.GetComponent<Rigidbody>();
-        bulletRigid.velocity = bulletPos.forward * 50;
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Vector3 shootDir;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
+        {
+            shootDir = (hit.point - bulletPos.position).normalized;
+        }
+        else
+        {
+            shootDir = ray.direction;
+        }
+
+        
+        bulletRigid.velocity = shootDir * 50f;
+
 
         yield return null;
         //탄피 배출

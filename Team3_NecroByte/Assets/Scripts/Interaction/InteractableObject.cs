@@ -126,18 +126,25 @@ public class InteractableObject : MonoBehaviour
         {
             case Item.Type.Coin:
                 pc.chip += item.value;
-                if(pc.chip > pc.maxChip)
+                pc.UpdateUI();
+                if (pc.chip > pc.maxChip)
                     pc.chip = pc.maxChip;
                 break;
             case Item.Type.HP:
                 pc.health += item.value;
+                pc.UpdateUI();
                 if(pc.health > pc.maxHealth)    
                     pc.health = pc.maxHealth;
                 break;
             case Item.Type.Grenade:
-                pc.hasthrow += item.value;
-                if(pc.hasthrow > pc.MaxHasThrow)
-                    pc.hasthrow = pc.MaxHasThrow;
+                pc.hasGrendes += item.value;
+                if(pc.hasGrendes > pc.MaxHasGrendes)
+                    pc.hasGrendes = pc.MaxHasGrendes;
+                break;
+            case Item.Type.Ammo:
+                pc.Ammo += item.value;
+                if (pc.Ammo > pc.maxAmmo)
+                    pc.Ammo = pc.maxAmmo;
                 break;
 
         }
