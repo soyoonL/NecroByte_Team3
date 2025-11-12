@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
     Weapon equipWeapon;
     bool isSwap;
     int equipWeaponIndex = -1;
+    bool Reloading;                            // 재장전
 
     // 근접 공격
     float fireDelay;
@@ -75,9 +76,6 @@ public class PlayerController : MonoBehaviour
     public TMP_Text healthText;
     public TMP_Text coinText;
     public RectTransform crosshair;
-
-    //재장전
-    bool Reloading;
 
     //중력 추가
     float yVelocity = 0f;
@@ -314,9 +312,9 @@ public class PlayerController : MonoBehaviour
 
     void Reload()
     {
+        // 제한사항
         if(equipWeapon == null) 
             return;
-
         if (equipWeapon.type == Weapon.Type.Melee)
             return;
         if (Ammo == 0)
@@ -333,10 +331,10 @@ public class PlayerController : MonoBehaviour
 
     void ReloadOut()
     {
-        int reBullet = Ammo < equipWeapon.maxBullet ? Ammo : equipWeapon.maxBullet;
-        equipWeapon.curBullet = reBullet;
+        int reAmmo = Ammo < equipWeapon.maxAmmo ? Ammo : equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = reAmmo;
         Reloading = false;
-        Ammo -= reBullet;
+        Ammo -= reAmmo;
     }
 
     private void OnTriggerStay(Collider other)

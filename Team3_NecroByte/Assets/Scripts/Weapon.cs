@@ -8,16 +8,16 @@ public class Weapon : MonoBehaviour
     public enum Type { Melee, Range }
     public Type type;
     public int damage;
-    public float rate;                   // 공격속도
-    public int maxBullet;
-    public int curBullet;
+    public float rate;                   // 총알 발사하는 속도
+    public int maxAmmo;
+    public int curAmmo;
     [Header("근접공격")]
     public BoxCollider meleeArea;        //공격범위
     public TrailRenderer trailEffect;    //휘두를 때의 효과
     [Header("원거리공격")]
     public Camera cam;
-    public Transform bulletPos;
-    public GameObject bullet;
+    public Transform bulletPos;          // 프리팹을 생성하는 위치
+    public GameObject bullet;            // 프리팹을 저장할 변수
     public Transform bulletCasePos;
     public GameObject bulletCase;
 
@@ -28,9 +28,9 @@ public class Weapon : MonoBehaviour
             StopCoroutine("Swing");
             StartCoroutine("Swing");
         }
-        else if(type == Type.Range && curBullet > 0) 
+        else if(type == Type.Range && curAmmo > 0) 
         {
-            curBullet--;
+            curAmmo--;
             StartCoroutine("Shot");
         }
   
@@ -66,15 +66,13 @@ public class Weapon : MonoBehaviour
             shootDir = ray.direction;
         }
 
-        
-        bulletRigid.velocity = shootDir * 50f;
-
+        bulletRigid.velocity = shootDir * 50f;  // 총알 날라가는 속도
 
         yield return null;
         //탄피 배출
         GameObject instantCase = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
         Rigidbody CaseRigid = instantCase.GetComponent<Rigidbody>();
-        Vector3 caseVec = bulletPos.up* Random.Range(2,3) + Vector3.right* Random.Range(-3,-2);
+        Vector3 caseVec = bulletPos.up* Random.Range(2,3) + Vector3.right* Random.Range(-3,-2);   //총알이 튕겨나가듯이 (탄피에 랜덤한 힘 가하기)
         CaseRigid.AddForce(caseVec,ForceMode.Impulse);
         CaseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);
     }
