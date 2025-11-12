@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3542210348393948514}
   - component: {fileID: 7215501625395012696}
   - component: {fileID: 2063698204242913684}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bullet_ShotGun
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190,7 +190,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
