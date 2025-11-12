@@ -4,7 +4,7 @@
 o 
 
 # material
-mtllib AXE.mtl
+mtllib AXE new.mtl
 usemtl palette
 
 # normals
