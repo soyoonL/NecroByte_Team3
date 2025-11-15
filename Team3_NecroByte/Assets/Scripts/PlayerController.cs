@@ -258,18 +258,14 @@ public class PlayerController : MonoBehaviour
             return;
         if (fourKey && (!hasWeapons[3] || equipWeaponIndex == 3))
             return;
-        if (fiveKey && (!hasWeapons[4] || equipWeaponIndex == 4))
-            return;
 
         int weaponIndex = -1;
         if (oneKey) weaponIndex = 0;
         if (twoKey) weaponIndex = 1;
         if (threeKey) weaponIndex = 2;
         if (fourKey) weaponIndex = 3;
-        if (fiveKey) weaponIndex = 4;
-
-
-        if (oneKey || twoKey || threeKey || fourKey || fiveKey && !isDodging)
+  
+        if (oneKey || twoKey || threeKey || fourKey  && !isDodging)
         {
             if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
 
@@ -345,7 +341,7 @@ public class PlayerController : MonoBehaviour
         if (hasGrendes == 0)
             return;
 
-        if(tKey && !isDodging && !isSwap && !Reloading)
+        if(tKey  && !isDodging && !isSwap && !Reloading)
         {
             if (cam == null) return;
 
