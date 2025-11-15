@@ -58,16 +58,17 @@ public class PlayerController : MonoBehaviour
     [Header("무기 저장")]
     public GameObject[] weapons;
     public bool[] hasWeapons;
-    public GameObject throwObj;
     GameObject nearObject;
     Weapon equipWeapon;
     bool isSwap;
     int equipWeaponIndex = -1;
-    bool Reloading;                            // 재장전
-
+    // 재장전
+    bool Reloading;                            
     // 근접 공격
     float fireDelay;
     bool isFireReady = true;
+    // EMP 
+    public GameObject GrenadeObj;
 
     [Header("카메라 회전")]
     public Camera followCamera;
@@ -101,6 +102,7 @@ public class PlayerController : MonoBehaviour
         Swap();
         Attack();
         Reload();
+        Grenade();
         TurnWithCrosshair();
     }
 
@@ -211,7 +213,7 @@ public class PlayerController : MonoBehaviour
 
             float power = dodgeCurve.Evaluate(t) * dodgePower;
 
-            transform.position += dodgeDirection * power * Time.deltaTime;
+            controller.Move(dodgeDirection * power * Time.deltaTime);
 
             if (t >= 1f)
             {
@@ -282,6 +284,7 @@ public class PlayerController : MonoBehaviour
 
             Invoke("SwapOut", 0.4f);
         }
+
     }
     void SwapOut()
     {
@@ -337,6 +340,37 @@ public class PlayerController : MonoBehaviour
         Ammo -= reAmmo;
     }
 
+    void Grenade()
+    {
+        if (hasGrendes == 0)
+            return;
+
+        if(tKey && !isDodging && !isSwap && !Reloading)
+        {
+            if (cam == null) return;
+
+            Ray ray = cam.ScreenPointToRay(crosshair.position);
+            Plane plane = new Plane(Vector3.up, transform.position);
+
+            float enter;
+            if (plane.Raycast(ray, out enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+
+                Vector3 dir = hitPoint - transform.position;
+                dir.y = 0;
+
+                GameObject instantGrenade = Instantiate(GrenadeObj, transform.position, transform.rotation);
+                Rigidbody rigidGre = instantGrenade.GetComponent<Rigidbody>();
+                rigidGre.AddForce(dir, ForceMode.Impulse);
+                rigidGre.AddTorque(Vector3.back*1, ForceMode.Impulse);
+
+                hasGrendes--;
+
+            }
+
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
         if(other.tag=="Weapon")

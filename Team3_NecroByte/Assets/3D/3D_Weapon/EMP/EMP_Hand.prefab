@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5237846887597270731}
-  - component: {fileID: 3995329568368940191}
   m_Layer: 0
   m_Name: EMP_Hand
   m_TagString: Untagged
@@ -34,23 +33,6 @@ Transform:
   - {fileID: 1938691224375401227}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3995329568368940191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4231074607428313371}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff4c069163a3b7a46a98e290a6801126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  damage: 0
-  rate: 0
-  meleeArea: {fileID: 0}
-  trailEffect: {fileID: 0}
 --- !u!1001 &2120390688828652768
 PrefabInstance:
   m_ObjectHideFlags: 0

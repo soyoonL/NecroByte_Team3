@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4031183337490785099}
   - component: {fileID: 8057104930417970766}
   - component: {fileID: 6181409177958396396}
+  - component: {fileID: 2133559936452230166}
   m_Layer: 0
   m_Name: EMP
   m_TagString: Weapon
@@ -121,6 +122,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 4
   value: 4
+--- !u!114 &2133559936452230166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6141802143951961273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bec14225c1d96184982b03d88c3e73b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectName: "\uC544\uC774\uD15C"
+  interactionText: "[E] \uC0C1\uD638\uC791\uC6A9"
+  interactionType: 0
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  highlightIntensity: 1.5
+  objectRenderer: {fileID: 0}
+  dialogSystem: {fileID: 0}
+  dialogProgress: {fileID: 0}
+  dialogPage1: {fileID: 0}
+  dialogPage2: {fileID: 0}
 --- !u!1 &6687614812453875509
 GameObject:
   m_ObjectHideFlags: 0

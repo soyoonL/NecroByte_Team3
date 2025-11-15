@@ -73,27 +73,37 @@ public class Enemy : MonoBehaviour
             Debug.Log("Range : " + curHealth);
         }
 
-        IEnumerator OnDamage(Vector3 reactVec)
+    }
+
+    public void HitByGrenade(Vector3 explosionPos)
+    {
+        curHealth -= 100;
+        Vector3 reactVec = transform.position - explosionPos;
+        StartCoroutine(OnDamage(reactVec));
+    }
+
+    IEnumerator OnDamage(Vector3 reactVec)
+    {
+        mat.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+
+        if (curHealth > 0)
         {
-            mat.color = Color.red;
-            yield return new WaitForSeconds(0.1f);
+            mat.color = Color.white;
+        }
+        else
+        {
+            mat.color = Color.gray;
+            gameObject.layer = 9;
 
-            if (curHealth > 0)
-            {
-                mat.color = Color.white;
-            }
-            else
-            {
-                mat.color = Color.gray;
-                gameObject.layer = 9;
+            isDead = true;
+            reactVec = reactVec.normalized;
+            reactVec += Vector3.up;
+            rigid.AddForce(reactVec * 4, ForceMode.Impulse);
 
-                isDead = true;
-                reactVec = reactVec.normalized;
-                reactVec += Vector3.up;
-                rigid.AddForce(reactVec * 4, ForceMode.Impulse);
-
-                Destroy(gameObject, 4);
-            }
+            Destroy(gameObject, 4);
         }
     }
+
+    
 }
