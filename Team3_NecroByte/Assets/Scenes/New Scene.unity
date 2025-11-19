@@ -122,6 +122,84 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &240586101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 240586103}
+  - component: {fileID: 240586102}
+  m_Layer: 0
+  m_Name: DialogSystem01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &240586102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240586101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2abaf6ada729a409e629c4fcaeae7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speakers:
+  - imageCharacter: {fileID: 0}
+    imageDialog: {fileID: 0}
+    textName: {fileID: 0}
+    textDialogue: {fileID: 0}
+    objectArrow: {fileID: 0}
+  - imageCharacter: {fileID: 0}
+    imageDialog: {fileID: 0}
+    textName: {fileID: 0}
+    textDialogue: {fileID: 0}
+    objectArrow: {fileID: 0}
+  dialogs:
+  - speakerIndex: 0
+    name: BangBoo 1
+    dialogue: i'm hungry
+  - speakerIndex: 1
+    name: BangBoo 2
+    dialogue: okay
+  - speakerIndex: 0
+    name: BangBoo 1
+    dialogue: ??????
+  - speakerIndex: 1
+    name: BangBoo 2
+    dialogue: Why?
+  - speakerIndex: 0
+    name: BangBoo 1
+    dialogue: Nothing....
+  - speakerIndex: 1
+    name: BangBoo 2
+    dialogue: ?????
+  isAutoStart: 1
+  isFirst: 1
+  curDialogIndex: -1
+  curSpeakerIndex: 0
+--- !u!4 &240586103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240586101}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 972.4039, y: 698.54504, z: -10.58368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1020172199
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,3 +485,4 @@ SceneRoots:
   - {fileID: 1383857646}
   - {fileID: 1020172201}
   - {fileID: 1767930586}
+  - {fileID: 240586103}

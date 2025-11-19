@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("기본정보")]
     public float maxHealth;
     public float curHealth;
     public Transform Target;
@@ -11,19 +13,25 @@ public class Enemy : MonoBehaviour
     Rigidbody rigid;
     BoxCollider boxCollider;
     Material mat;
-    
-   
+    NavMeshAgent nav;                  
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         mat = GetComponentInChildren<MeshRenderer>().material;
-        
+        nav = GetComponent<NavMeshAgent>();
     }
 
     private void Update()
     {
-        
+        nav.SetDestination(Target.position);    
+    }
+
+    private void FixedUpdate()
+    {
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -37,8 +45,7 @@ public class Enemy : MonoBehaviour
             StartCoroutine(OnDamage(reactVec));
             Debug.Log("Melee : " + curHealth);
         }
-
-        else if(other.tag == "Bullet")
+        else if (other.tag == "Bullet")
         {
             Projectile projectile = other.GetComponent<Projectile>();
             curHealth -= projectile.damage;
@@ -48,7 +55,6 @@ public class Enemy : MonoBehaviour
             StartCoroutine(OnDamage(reactVec));
             Debug.Log("Range : " + curHealth);
         }
-
     }
 
     public void HitByGrenade(Vector3 explosionPos)
@@ -69,6 +75,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            // 사망 처리
             mat.color = Color.gray;
             gameObject.layer = 9;
 
@@ -79,6 +86,4 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject, 4);
         }
     }
-
-    
 }
