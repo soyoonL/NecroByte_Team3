@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponentInChildren<MeshRenderer>().material;
+        mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
@@ -81,17 +81,17 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnDamage(Vector3 reactVec)
     {
-        mat.color = Color.red;
+        mat.SetColor("_BaseColor", Color.red);
         yield return new WaitForSeconds(0.1f);
 
         if (curHealth > 0)
         {
-            mat.color = Color.white;
+            mat.SetColor("_BaseColor", Color.white);
         }
         else
         {
             // »ç¸Á Ã³¸®
-            mat.color = Color.gray;
+            mat.SetColor("_BaseColor", Color.gray);
             gameObject.layer = 9;
             isChase = false;
             nav.enabled = false;
