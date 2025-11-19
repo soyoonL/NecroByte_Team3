@@ -43,14 +43,6 @@ public class Enemy : MonoBehaviour
         }  
     }
 
-    void FreezeVelocity()
-    {
-        if (isChase)
-        {
-            rigid.velocity = Vector3.zero;
-            rigid.angularVelocity = Vector3.zero;
-        }
-    }
 
     void Targeting()
     {
@@ -86,7 +78,7 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         Targeting();
-        FreezeVelocity();
+        
     }
         
     

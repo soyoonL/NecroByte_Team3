@@ -410,6 +410,7 @@ public class PlayerController : MonoBehaviour
             {
                 Projectile enemyBullet = other.GetComponent<Projectile>();
                 health -= enemyBullet.damage;
+                UpdateUI();
                 Debug.Log("µ¥¹ÌÁö!!");
                 StartCoroutine(OnDamage());
             }
