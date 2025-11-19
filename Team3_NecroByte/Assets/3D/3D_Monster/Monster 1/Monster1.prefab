@@ -99,8 +99,7 @@ MonoBehaviour:
   maxHealth: 50
   curHealth: 50
   Target: {fileID: 0}
-  detectRange: 10
-  chaseSpeed: 3.5
+  isChase: 0
 --- !u!195 &1748726278835397091
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -379,7 +378,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: 68b40ad768fdcdc46beca3659650d082, type: 2}
     - target: {fileID: 5866666021909216657, guid: 18b51dd7deba2594f8189db5775016c7,
         type: 3}
       propertyPath: m_ApplyRootMotion
