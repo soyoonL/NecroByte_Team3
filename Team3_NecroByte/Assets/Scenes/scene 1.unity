@@ -5708,6 +5708,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3945701441309298647, guid: 157809d700e5ac94aad87c4d5fff71fc,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 6264771502960024871, guid: 157809d700e5ac94aad87c4d5fff71fc,
         type: 3}
       propertyPath: Target
@@ -5720,8 +5725,18 @@ PrefabInstance:
       objectReference: {fileID: 176640525}
     - target: {fileID: 6264771502960024871, guid: 157809d700e5ac94aad87c4d5fff71fc,
         type: 3}
+      propertyPath: curHealth
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264771502960024871, guid: 157809d700e5ac94aad87c4d5fff71fc,
+        type: 3}
       propertyPath: fireDelay
-      value: 0.1
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264771502960024871, guid: 157809d700e5ac94aad87c4d5fff71fc,
+        type: 3}
+      propertyPath: maxHealth
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6264771502960024871, guid: 157809d700e5ac94aad87c4d5fff71fc,
         type: 3}
@@ -5734,10 +5749,25 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5152500460190557290, guid: 6ee7c7992cd8da446a939460800e1ce6,
         type: 3}
+    - target: {fileID: 6264771502960024871, guid: 157809d700e5ac94aad87c4d5fff71fc,
+        type: 3}
+      propertyPath: floatingHeight
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7276578474838369548, guid: 157809d700e5ac94aad87c4d5fff71fc,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8322435613118993881, guid: 157809d700e5ac94aad87c4d5fff71fc,
         type: 3}
       propertyPath: m_Name
       value: Monster3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8322435613118993881, guid: 157809d700e5ac94aad87c4d5fff71fc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8489913068751267589, guid: 157809d700e5ac94aad87c4d5fff71fc,
         type: 3}
