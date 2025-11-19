@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
 
     Rigidbody rigid;
     BoxCollider boxCollider;
-    Material mat;
+    Renderer[] renderers;
     NavMeshAgent nav;
     Animator anim;
 
@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
         rigid.constraints = RigidbodyConstraints.FreezeRotation;
 
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponentInChildren<SkinnedMeshRenderer>().material;
+        renderers = GetComponentsInChildren<Renderer>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
@@ -131,6 +131,7 @@ public class Enemy : MonoBehaviour
                 break;
             case Type.Fly:
                 yield return new WaitForSeconds(0.3f);
+                firePos.rotation = Quaternion.LookRotation(model.forward);
                 FireBullet();
                 yield return new WaitForSeconds(1f);
                 break;
@@ -155,7 +156,12 @@ public class Enemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePos.position, firePos.rotation);
 
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
-        rb.velocity = firePos.forward * 15f;   // 총알 속도
+        if (rb != null)
+        {
+            rb.useGravity = false;                     // 중력 끔
+            rb.velocity = firePos.forward * 20f;       // 앞으로 직진하게 이동
+        }
+
     }
 
 
@@ -192,22 +198,34 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnDamage(Vector3 reactVec)
     {
-        mat.SetColor("_BaseColor", Color.red);
+        foreach (Renderer r in renderers)
+            r.material.SetColor("_BaseColor", Color.red);
+
         yield return new WaitForSeconds(0.1f);
 
         if (curHealth > 0)
         {
-            mat.SetColor("_BaseColor", Color.white);
+            foreach (Renderer r in renderers)
+                r.material.SetColor("_BaseColor", Color.white);
         }
         else
         {
             // 사망 처리
-            mat.SetColor("_BaseColor", Color.gray);
+            foreach (Renderer r in renderers)
+                r.material.SetColor("_BaseColor", Color.gray);
+
             gameObject.layer = 9;
             isChase = false;
             nav.enabled = false;
+
             if (enemyType != Type.Fly)
-                anim.SetTrigger("DoDie");
+            {
+                anim.SetTrigger("DoDie");   // 지상몹은 기존 사망 애니메이션
+            }
+            else
+            {
+                StartCoroutine(FlyDeathFall()); // 비행 몹 전용 죽음 연출 coroutine 시작
+            }
 
             reactVec = reactVec.normalized;
             reactVec += Vector3.up;
