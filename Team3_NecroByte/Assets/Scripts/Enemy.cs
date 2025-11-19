@@ -216,4 +216,20 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject, 4);
         }
     }
+
+    IEnumerator FlyDeathFall()
+    {
+        this.enabled = false;
+
+        rigid.isKinematic = false;
+        rigid.useGravity = true;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            model.Rotate(Vector3.forward * 300f * Time.deltaTime);
+            t += Time.deltaTime;
+            yield return null;
+        }
+    }
 }
