@@ -78,8 +78,12 @@ public class PlayerController : MonoBehaviour
     public TMP_Text coinText;
     public RectTransform crosshair;
 
-    //중력 추가
+    // 중력 추가
     float yVelocity = 0f;
+    // 적 피격 관련
+    bool isDamage;
+    Renderer[] meshs;
+    Color[] originalColors;
 
     void Start()
     { 
@@ -90,6 +94,16 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
     }
 
+    private void Awake()
+    {
+        meshs = GetComponentsInChildren<Renderer>();
+        originalColors = new Color[meshs.Length];
+
+        for (int i = 0; i < meshs.Length; i++)
+        {
+            originalColors[i] = meshs[i].material.GetColor("_BaseColor");
+        }
+    }
     void Update()
     {
         crosshair.position = Input.mousePosition;
@@ -390,6 +404,31 @@ public class PlayerController : MonoBehaviour
                 UnityEngine.SceneManagement.SceneManager.LoadScene(info);
             }
         }
+        else if(other.tag == "EnemyBullet")
+        {
+            if (!isDamage)
+            {
+                Projectile enemyBullet = other.GetComponent<Projectile>();
+                health -= enemyBullet.damage;
+                Debug.Log("데미지!!");
+                StartCoroutine(OnDamage());
+            }
+        }
+    }
+
+    IEnumerator OnDamage()
+    {
+        isDamage = true;
+        foreach(Renderer mesh in meshs)
+        {
+            mesh.material.SetColor("_BaseColor", Color.yellow);
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        isDamage = false;
+        for (int i = 0; i < meshs.Length; i++)
+            meshs[i].material.SetColor("_BaseColor", originalColors[i]);
     }
 
 
