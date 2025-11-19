@@ -422,7 +422,7 @@ public class PlayerController : MonoBehaviour
         isDamage = true;
         foreach(Renderer mesh in meshs)
         {
-            mesh.material.SetColor("_BaseColor", Color.yellow);
+            mesh.material.SetColor("_BaseColor", Color.red);
         }
 
         yield return new WaitForSeconds(1f);
