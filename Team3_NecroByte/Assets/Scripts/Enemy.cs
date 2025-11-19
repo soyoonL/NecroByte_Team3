@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A,B,C};
+    public enum Type { Normal,Rush,Fly};
     public Type enemyType;
     [Header("기본정보")]
     public float maxHealth;
@@ -14,6 +14,15 @@ public class Enemy : MonoBehaviour
     public BoxCollider meleeArea;
     public bool isChase;
     public bool isAttack;
+
+    [Header("C타입(비행 원거리)")]
+    public Transform model;           // 적의 실제 모델
+    public float floatingHeight = 2f; // 떠있는 높이
+    public Transform firePos;         // 총알 발사 위치
+    public GameObject bulletPrefab;   // 총알 프리팹
+    public float fireDelay = 1.5f;    // 공격 간격
+    
+
     Rigidbody rigid;
     BoxCollider boxCollider;
     Material mat;
@@ -36,7 +45,8 @@ public class Enemy : MonoBehaviour
     void ChaseStart()
     {
         isChase = true;
-        anim.SetBool("isRun", true);
+        if (enemyType != Type.Fly)
+            anim.SetBool("isRun", true);
     }
     private void Update()
     {
@@ -44,7 +54,19 @@ public class Enemy : MonoBehaviour
         {
             nav.SetDestination(Target.position);
             nav.isStopped = !isChase;
-        }  
+        }
+
+        if (enemyType == Type.Fly && model != null)
+        {
+            Vector3 pos = model.localPosition;
+            pos.y = floatingHeight;
+            model.localPosition = pos;
+
+            // 플레이어 방향 보기 (쿼터뷰니까 Y 회전만)
+            Vector3 look = Target.position;
+            look.y = model.position.y;
+            model.LookAt(look);
+        }
     }
 
 
@@ -55,16 +77,17 @@ public class Enemy : MonoBehaviour
 
         switch (enemyType)
         {
-            case Type.A:
+            case Type.Normal:
                 targetRadius = 1.5f;
                 targetRange = 3f;
                 break;
-            case Type.B:
+            case Type.Rush:
                 targetRadius = 1f;
                 targetRange = 12f;
                 break;
-            case Type.C:
-
+            case Type.Fly:
+                targetRadius = 1.2f;
+                targetRange = 10f;
                 break;
         }
 
@@ -80,11 +103,13 @@ public class Enemy : MonoBehaviour
     {
         isChase = false;    
         isAttack = true;
-        anim.SetBool("isAttack", true);
+
+        if (enemyType != Type.Fly)
+            anim.SetBool("isAttack", true);
 
         switch (enemyType)
         {
-            case Type.A:
+            case Type.Normal:
                 yield return new WaitForSeconds(0.2f);
                 meleeArea.enabled = true;
 
@@ -93,7 +118,7 @@ public class Enemy : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
                 break;
-            case Type.B:
+            case Type.Rush:
                 yield return new WaitForSeconds(0.1f);
                 rigid.AddForce(transform.forward * 20,ForceMode.Impulse);
                 meleeArea.enabled=true;
@@ -104,14 +129,17 @@ public class Enemy : MonoBehaviour
 
                 yield return new WaitForSeconds(2f);
                 break;
-            case Type.C:
-
+            case Type.Fly:
+                yield return new WaitForSeconds(0.3f);
+                FireBullet();
+                yield return new WaitForSeconds(1f);
                 break;
         }
         
         isChase = true;
         isAttack = false;
-        anim.SetBool("isAttack", false);
+        if (enemyType != Type.Fly)
+            anim.SetBool("isAttack", false);
     }
 
     private void FixedUpdate()
@@ -119,8 +147,18 @@ public class Enemy : MonoBehaviour
         Targeting();
         
     }
-        
-    
+
+    void FireBullet()
+    {
+        if (bulletPrefab == null || firePos == null) return;
+
+        GameObject bullet = Instantiate(bulletPrefab, firePos.position, firePos.rotation);
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        rb.velocity = firePos.forward * 15f;   // 총알 속도
+    }
+
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -168,7 +206,8 @@ public class Enemy : MonoBehaviour
             gameObject.layer = 9;
             isChase = false;
             nav.enabled = false;
-            anim.SetTrigger("DoDie");
+            if (enemyType != Type.Fly)
+                anim.SetTrigger("DoDie");
 
             reactVec = reactVec.normalized;
             reactVec += Vector3.up;
