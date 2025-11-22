@@ -2781,8 +2781,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 3
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d2de41243b79904478d39f8d2de6049e, type: 2}
-  m_sharedMaterial: {fileID: -3865609150434307146, guid: d2de41243b79904478d39f8d2de6049e,
+  m_fontAsset: {fileID: 11400000, guid: 4fbf931782d0a874fabfce65d48f5408, type: 2}
+  m_sharedMaterial: {fileID: -5060069776123384480, guid: 4fbf931782d0a874fabfce65d48f5408,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -3448,8 +3448,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 4
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d2de41243b79904478d39f8d2de6049e, type: 2}
-  m_sharedMaterial: {fileID: -3865609150434307146, guid: d2de41243b79904478d39f8d2de6049e,
+  m_fontAsset: {fileID: 11400000, guid: 4fbf931782d0a874fabfce65d48f5408, type: 2}
+  m_sharedMaterial: {fileID: -5060069776123384480, guid: 4fbf931782d0a874fabfce65d48f5408,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -5095,8 +5095,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 2
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d2de41243b79904478d39f8d2de6049e, type: 2}
-  m_sharedMaterial: {fileID: -3865609150434307146, guid: d2de41243b79904478d39f8d2de6049e,
+  m_fontAsset: {fileID: 11400000, guid: 4fbf931782d0a874fabfce65d48f5408, type: 2}
+  m_sharedMaterial: {fileID: -5060069776123384480, guid: 4fbf931782d0a874fabfce65d48f5408,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -5785,8 +5785,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d2de41243b79904478d39f8d2de6049e, type: 2}
-  m_sharedMaterial: {fileID: -3865609150434307146, guid: d2de41243b79904478d39f8d2de6049e,
+  m_fontAsset: {fileID: 11400000, guid: 4fbf931782d0a874fabfce65d48f5408, type: 2}
+  m_sharedMaterial: {fileID: -5060069776123384480, guid: 4fbf931782d0a874fabfce65d48f5408,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
