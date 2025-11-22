@@ -303,8 +303,8 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateUI()
     {
-        healthText.text = $"{health} / {maxHealth}";
-        coinText.text = $"Chip : {chip}";
+        healthText.text = $"{health}";
+        coinText.text = $"{chip}";
     }
 
     void Attack()
