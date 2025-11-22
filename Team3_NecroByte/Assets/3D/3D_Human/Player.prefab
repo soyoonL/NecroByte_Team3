@@ -415,8 +415,8 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 4
-  m_Radius: 0.5
+  m_Height: 5
+  m_Radius: 0.8
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -664,17 +664,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4436c6ca420db924e9f60b8b4fa6ce99,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 70
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4436c6ca420db924e9f60b8b4fa6ce99,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 70
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4436c6ca420db924e9f60b8b4fa6ce99,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 70
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4436c6ca420db924e9f60b8b4fa6ce99,
         type: 3}
@@ -1084,6 +1084,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7269304127933513589, guid: 67a9794507bec9e469762a591f63b00b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7269304127933513589, guid: 67a9794507bec9e469762a591f63b00b,
         type: 3}
