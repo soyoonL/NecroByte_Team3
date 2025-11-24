@@ -401,7 +401,7 @@ public class PlayerController : MonoBehaviour
             string info = other.GetComponent<SceneObject>().objectInfo;
             if (info.StartsWith("scene"))
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(info);
+                FadeManager.Instance.FadeOutAndLoadScene(info);
             }
         }
         else if(other.tag == "EnemyBullet")
