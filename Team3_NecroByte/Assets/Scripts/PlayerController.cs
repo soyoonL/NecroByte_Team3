@@ -118,6 +118,7 @@ public class PlayerController : MonoBehaviour
         Reload();
         Grenade();
         TurnWithCrosshair();
+        Interaction();
     }
 
     void GetInput()
@@ -381,9 +382,18 @@ public class PlayerController : MonoBehaviour
 
         }
     }
+
+    void Interaction()
+    {
+        if (eKey && nearObject != null&& nearObject.tag == "Shop")
+        {
+            Shop shop = nearObject.GetComponent<Shop>();
+            shop.Enter(this);
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
-        if(other.tag=="Weapon")
+        if(other.tag=="Weapon" || other.tag == "Shop")
             nearObject = other.gameObject;
 
     }
@@ -392,6 +402,13 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "Weapon")
             nearObject = null;
+
+        else if(other.tag == "Shop")
+        {
+            Shop shop = nearObject.GetComponent<Shop>();
+            shop.EXIT();
+            nearObject = null;
+        }
     }
 
     void OnTriggerEnter(Collider other)
