@@ -9,7 +9,7 @@ public class FadeManager : MonoBehaviour
     public static FadeManager Instance;
 
     public Image fadeImage;
-    public float fadeDuration = 1f;
+    public float fadeDuration = 2f;
 
     private void Awake()
     {
@@ -43,5 +43,29 @@ public class FadeManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneName);
+
+        // 씬 다 로드될때까지 한 프레임 기다림
+        yield return null;
+
+        // 0.1초 정도 텀 주기
+        yield return new WaitForSeconds(0.1f);
+
+        StartCoroutine(FadeInRoutine());
+    }
+
+    IEnumerator FadeInRoutine()
+    {
+        float timer = 0f;
+        Color c = fadeImage.color;
+        c.a = 1f;
+        fadeImage.color = c;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+            c.a = 1f - (timer / fadeDuration);
+            fadeImage.color = c;
+            yield return null;
+        }
     }
 }
