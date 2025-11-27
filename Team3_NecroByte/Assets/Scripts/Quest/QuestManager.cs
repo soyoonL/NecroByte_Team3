@@ -25,6 +25,8 @@ public class QuestManager : MonoBehaviour
         // (선택) 에디터에서 세팅하지 않았으면 기본 샘플 세팅을 해둘 수 있다.
         if (mainQuests.Count == 0) CreateDefaultMainQuests();
         if (subQuests.Count == 0) CreateDefaultSubQuests();
+
+        ActivateFirstMainQuest();
     }
 
     #region --- 메인퀘스트 관련 헬퍼 ---

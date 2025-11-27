@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         UpdateUI();
 
-        Cursor.visible = false;
+        //Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
 
