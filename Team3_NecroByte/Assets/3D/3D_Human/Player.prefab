@@ -351,13 +351,13 @@ MonoBehaviour:
   maxChip: 0
   maxAmmo: 0
   MaxHasGrendes: 0
-  walkSpeed: 5
-  runSpeed: 10
+  walkSpeed: 7
+  runSpeed: 12
   rotationSpeed: 5
   animator: {fileID: 7654535079916261339}
   cam: {fileID: 0}
   dodgeDuration: 0.4
-  dodgePower: 10
+  dodgePower: 30
   dodgeCooldown: 2
   dodgeCurve:
     serializedVersion: 2

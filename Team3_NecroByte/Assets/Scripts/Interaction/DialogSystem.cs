@@ -152,6 +152,15 @@ public class DialogSystem : MonoBehaviour
         speakers[curSpeakerIndex].objectArrow.SetActive(true);
     }
 
+    public bool IsCurrentLineFinished
+    {
+        get
+        {
+            return isTypingEffect == false
+                   && speakers[curSpeakerIndex].objectArrow.activeSelf;
+        }
+    }
+
     [System.Serializable]
     public struct Speaker //화자의 정보를 저장하는 구조체
     {
