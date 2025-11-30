@@ -6,11 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class FadeManager : MonoBehaviour
 {
-    public static FadeManager Instance;
+    public static FadeManager Instance { get; private set; }
 
     public Image fadeImage;
     public float fadeDuration = 2f;
 
+    private void Start()
+    {
+        fadeImage.raycastTarget = false;
+    }
     private void Awake()
     {
         if (Instance == null)
@@ -55,17 +59,24 @@ public class FadeManager : MonoBehaviour
 
     IEnumerator FadeInRoutine()
     {
-        float timer = 0f;
         Color c = fadeImage.color;
-        c.a = 1f;
-        fadeImage.color = c;
-
-        while (timer < fadeDuration)
+        
+        if(fadeDuration > 0)
         {
-            timer += Time.deltaTime;
-            c.a = 1f - (timer / fadeDuration);
+            float timer = 0f;
+            c.a = 1f;
             fadeImage.color = c;
-            yield return null;
+
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                c.a = 1f - (timer / fadeDuration);
+                fadeImage.color = c;
+                yield return null;
+            }
         }
+
+        c.a = 0f;
+        fadeImage.color = c;
     }
 }
