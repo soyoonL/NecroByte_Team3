@@ -5,23 +5,24 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { Normal,Rush,Fly};
+    public enum Type { Normal, Rush, Fly };
     public Type enemyType;
-    [Header("기본정보")]
+    [Header("Enemy 정보")]
     public float maxHealth;
     public float curHealth;
     public Transform Target;
     public BoxCollider meleeArea;
     public bool isChase;
     public bool isAttack;
+    public GameObject[] coins;
 
-    [Header("C타입(비행 원거리)")]
-    public Transform model;           // 적의 실제 모델
-    public float floatingHeight = 2f; // 떠있는 높이
-    public Transform firePos;         // 총알 발사 위치
-    public GameObject bulletPrefab;   // 총알 프리팹
-    public float fireDelay = 1.5f;    // 공격 간격
-    
+    [Header("비행체 정보")]
+    public Transform model;           
+    public float floatingHeight = 2f; 
+    public Transform firePos;         
+    public GameObject bulletPrefab;   
+    public float fireDelay = 1.5f;    
+
 
     Rigidbody rigid;
     BoxCollider boxCollider;
@@ -33,6 +34,9 @@ public class Enemy : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         rigid.constraints = RigidbodyConstraints.FreezeRotation;
+
+        // Make the Rigidbody kinematic while NavMeshAgent controls movement to avoid sliding/pushing
+        rigid.isKinematic = true;
 
         boxCollider = GetComponent<BoxCollider>();
         renderers = GetComponentsInChildren<Renderer>();
@@ -62,7 +66,6 @@ public class Enemy : MonoBehaviour
             pos.y = floatingHeight;
             model.localPosition = pos;
 
-            // 플레이어 방향 보기 (쿼터뷰니까 Y 회전만)
             Vector3 look = Target.position;
             look.y = model.position.y;
             model.LookAt(look);
@@ -93,7 +96,7 @@ public class Enemy : MonoBehaviour
 
         RaycastHit[] rayHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetRange, LayerMask.GetMask("Player"));
 
-        if(rayHits.Length > 0 && !isAttack)
+        if (rayHits.Length > 0 && !isAttack)
         {
             StartCoroutine(Attack());
         }
@@ -101,7 +104,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator Attack()
     {
-        isChase = false;    
+        isChase = false;
         isAttack = true;
 
         if (enemyType != Type.Fly)
@@ -120,11 +123,15 @@ public class Enemy : MonoBehaviour
                 break;
             case Type.Rush:
                 yield return new WaitForSeconds(0.1f);
-                rigid.AddForce(transform.forward * 20,ForceMode.Impulse);
-                meleeArea.enabled=true;
+                // enable physics temporarily for the rush impulse
+                rigid.isKinematic = false;
+                rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
+                meleeArea.enabled = true;
 
                 yield return new WaitForSeconds(0.5f);
                 rigid.velocity = Vector3.zero;
+                // disable physics again so NavMeshAgent regains smooth control
+                rigid.isKinematic = true;
                 meleeArea.enabled = false;
 
                 yield return new WaitForSeconds(2f);
@@ -136,7 +143,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(1f);
                 break;
         }
-        
+
         isChase = true;
         isAttack = false;
         if (enemyType != Type.Fly)
@@ -146,7 +153,7 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         Targeting();
-        
+
     }
 
     void FireBullet()
@@ -158,8 +165,8 @@ public class Enemy : MonoBehaviour
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.useGravity = false;                     // 중력 끔
-            rb.velocity = firePos.forward * 20f;       // 앞으로 직진하게 이동
+            rb.useGravity = false;                     
+            rb.velocity = firePos.forward * 20f;       
         }
 
     }
@@ -210,7 +217,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // 사망 처리
+            
             foreach (Renderer r in renderers)
                 r.material.SetColor("_BaseColor", Color.gray);
 
@@ -218,14 +225,36 @@ public class Enemy : MonoBehaviour
             isChase = false;
             nav.enabled = false;
 
-            if (enemyType != Type.Fly)
+            if (coins != null && coins.Length > 0)
             {
-                anim.SetTrigger("DoDie");   // 지상몹은 기존 사망 애니메이션
+                int ranCoin = Random.Range(0, coins.Length); // use array length, not hard-coded 3
+                GameObject coinPrefab = coins[ranCoin];
+                if (coinPrefab != null)
+                {
+                    Vector3 spawnPos = transform.position + Vector3.up * 0.5f; // raise coin a little
+                    Instantiate(coinPrefab, spawnPos, Quaternion.identity);
+                }
+                else
+                {
+                    Debug.LogWarning($"Enemy: coins[{ranCoin}] is null. Make sure coin prefabs are assigned in the Inspector.", this);
+                }
             }
             else
             {
-                StartCoroutine(FlyDeathFall()); // 비행 몹 전용 죽음 연출 coroutine 시작
+                Debug.LogWarning("Enemy: no coin prefabs assigned to 'coins' array.", this);
             }
+
+            if (enemyType != Type.Fly)
+            {
+                anim.SetTrigger("DoDie");   
+            }
+            else
+            {
+                StartCoroutine(FlyDeathFall()); 
+            }
+
+            // ensure physics is enabled for the death knockback
+            rigid.isKinematic = false;
 
             reactVec = reactVec.normalized;
             reactVec += Vector3.up;
