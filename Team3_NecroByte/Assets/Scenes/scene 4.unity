@@ -818,12 +818,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5510176006677710519}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &482872017 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4546205609964051917, guid: 75b937ea4fbf7944dbbc2f9f2f1b1dc3,
-    type: 3}
-  m_PrefabInstance: {fileID: 5510176006677710519}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &487753820
 GameObject:
   m_ObjectHideFlags: 0
@@ -10448,7 +10442,7 @@ PrefabInstance:
         type: 3}
       propertyPath: crosshair
       value: 
-      objectReference: {fileID: 482872017}
+      objectReference: {fileID: 5510176006677710520}
     - target: {fileID: 6407943377665575728, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
       propertyPath: maxHealth
@@ -16224,6 +16218,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75b937ea4fbf7944dbbc2f9f2f1b1dc3, type: 3}
+--- !u!224 &5510176006677710520 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4507811311453033297, guid: 75b937ea4fbf7944dbbc2f9f2f1b1dc3,
+    type: 3}
+  m_PrefabInstance: {fileID: 5510176006677710519}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9179561046703066488
 PrefabInstance:
   m_ObjectHideFlags: 0

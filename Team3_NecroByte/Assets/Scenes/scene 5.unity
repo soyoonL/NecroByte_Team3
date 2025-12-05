@@ -6138,7 +6138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4382f1ee73dc6a49891cdadc7e041e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectInfo: scene 4
+  objectInfo: scene 6
 --- !u!65 &1094728165
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6718,6 +6718,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1689322060}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1689322062 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4507811311453033297, guid: 75b937ea4fbf7944dbbc2f9f2f1b1dc3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1689322060}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1815701640
 GameObject:
   m_ObjectHideFlags: 0
@@ -7096,7 +7102,7 @@ PrefabInstance:
         type: 3}
       propertyPath: crosshair
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1689322062}
     - target: {fileID: 6407943377665575728, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
       propertyPath: maxHealth
