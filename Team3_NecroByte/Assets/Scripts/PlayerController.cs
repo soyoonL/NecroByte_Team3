@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
     public GameObject[] weapons;
     public bool[] hasWeapons;
     GameObject nearObject;
-    Weapon equipWeapon;
+    public Weapon equipWeapon;
     bool isSwap;
     int equipWeaponIndex = -1;
     // ¿Á¿Â¿¸
@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
         Plane plane = new Plane(Vector3.up, transform.position);
 
         float enter;
-        if (plane.Raycast(ray, out enter))
+        if (plane.Raycast(ray, out enter) && !isDead)
         {
             Vector3 hitPoint = ray.GetPoint(enter);
 
@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
     void Dodge()
     {
-        if (!isDodging && !dodgeOnCooldown && !isSwap && dKey)
+        if (!isDodging && !dodgeOnCooldown && !isSwap && dKey && !isDead)
         {
             dodgeDirection = transform.forward.normalized;
             isDodging = true;
@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(DodgeCooldownRoutine());
         }
 
-        if (isDodging)
+        if (isDodging && !isDead)
         {
             dodgeTimer += Time.deltaTime;
             float t = dodgeTimer / dodgeDuration;
@@ -247,7 +247,7 @@ public class PlayerController : MonoBehaviour
 
     void Interation()
     {
-        if (eKey && nearObject != null && !isDodging && !isSwap)
+        if (eKey && nearObject != null && !isDodging && !isSwap && !isDead)
         {
             if (nearObject.tag == "Weapon")
             {
@@ -280,7 +280,7 @@ public class PlayerController : MonoBehaviour
         if (threeKey) weaponIndex = 2;
         if (fourKey) weaponIndex = 3;
   
-        if (oneKey || twoKey || threeKey || fourKey  && !isDodging)
+        if (oneKey || twoKey || threeKey || fourKey && !isDodging && !isDead)
         {
             if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
 
@@ -334,7 +334,7 @@ public class PlayerController : MonoBehaviour
         if (Ammo == 0)
             return;
 
-        if(lKey && !isDodging && !isSwap && isFireReady)
+        if(lKey && !isDodging && !isSwap && isFireReady && !isDead)
         {
             animator.SetTrigger("reloadTrigger");
             Reloading = true;
@@ -356,7 +356,7 @@ public class PlayerController : MonoBehaviour
         if (hasGrendes == 0)
             return;
 
-        if(tKey  && !isDodging && !isSwap && !Reloading)
+        if(tKey && !isDodging && !isSwap && !Reloading && !isDead)
         {
             if (cam == null) return;
 
@@ -442,11 +442,27 @@ public class PlayerController : MonoBehaviour
             mesh.material.SetColor("_BaseColor", Color.red);
         }
 
+        if (health <= 0 && !isDead)
+        {
+            
+            OnDie();
+        }
+
+        //Time.timeScale = 0f;
+
         yield return new WaitForSeconds(1f);
 
         isDamage = false;
         for (int i = 0; i < meshs.Length; i++)
             meshs[i].material.SetColor("_BaseColor", originalColors[i]);
+    }
+
+    void OnDie()
+    {
+        animator.SetTrigger("doDie");
+        isDead = true;
+        manager.GameOver();
+
     }
 
 
