@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
     // 근접 공격
     float fireDelay;
     bool isFireReady = true;
+    bool isAttacking = false;
     // EMP 
     public GameObject GrenadeObj;
 
@@ -316,12 +317,23 @@ public class PlayerController : MonoBehaviour
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if(aKey && isFireReady && !isDodging && !isSwap)
+        if(aKey && isFireReady && !isDodging && !isSwap && !isDead)
         {
+            if (equipWeapon.type == Weapon.Type.Melee)
+            {
+                isAttacking = true;
+                Invoke(nameof(EndAttack), 0.5f);
+            }
             equipWeapon.UseWeapon();
             animator.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "swingTrigger" : "shootTrigger");
+           
             fireDelay = 0;
         }
+    }
+
+    public void EndAttack()
+    {
+        isAttacking = false;
     }
 
     void Reload()
