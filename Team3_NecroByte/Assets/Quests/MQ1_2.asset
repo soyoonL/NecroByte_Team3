@@ -18,4 +18,4 @@ MonoBehaviour:
   requireItem: 0
   requiredItemID: 
   rewardGold: 2
-  state: 1
+  state: 0
