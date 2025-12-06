@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ä¿Æ÷³ÍÆ®")]
     public Animator animator;
+    public Animator pontAni;
     public Camera cam;
     private CharacterController controller;
 
