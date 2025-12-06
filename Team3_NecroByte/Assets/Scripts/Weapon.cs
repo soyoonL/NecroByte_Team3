@@ -42,10 +42,10 @@ public class Weapon : MonoBehaviour
         meleeArea.enabled = true;
         trailEffect.enabled = true;
         //2
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.4f);
         meleeArea.enabled = false;
         //3
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.15f);
         trailEffect.enabled = false;
     }
 
@@ -57,6 +57,8 @@ public class Weapon : MonoBehaviour
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         Vector3 shootDir;
 
+        //PlayerController player = GetComponent<PlayerController>();
+        //player.Ammo--;
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
             shootDir = (hit.point - bulletPos.position).normalized;
