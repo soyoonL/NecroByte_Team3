@@ -113,13 +113,13 @@ public class Enemy : MonoBehaviour
         switch (enemyType)
         {
             case Type.Normal:
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.8f);
                 meleeArea.enabled = true;
 
                 yield return new WaitForSeconds(1f);
                 meleeArea.enabled = false;
 
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.3f);
                 break;
             case Type.Rush:
                 yield return new WaitForSeconds(0.1f);
