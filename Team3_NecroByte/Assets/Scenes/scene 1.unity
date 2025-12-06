@@ -621,6 +621,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 07d9cc7a2b61249489a7dfe009058583,
+        type: 3}
+      propertyPath: m_TagString
+      value: Floor
+      objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 07d9cc7a2b61249489a7dfe009058583,
         type: 3}
       propertyPath: m_Layer
@@ -1446,6 +1451,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5b1380a9664d57b4b987c174c88d5075,
+        type: 3}
+      propertyPath: m_TagString
+      value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 5b1380a9664d57b4b987c174c88d5075,
         type: 3}
@@ -3025,7 +3035,7 @@ Transform:
   m_GameObject: {fileID: 591283097}
   serializedVersion: 2
   m_LocalRotation: {x: -0.3460913, y: 0.35481808, z: -0.14335579, w: -0.8566062}
-  m_LocalPosition: {x: -4.5, y: 18.7, z: -169.7}
+  m_LocalPosition: {x: -3.8, y: 17.1, z: -171.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3703,7 +3713,7 @@ PrefabInstance:
     - target: {fileID: 4102986075333478629, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.8
+      value: -13.6
       objectReference: {fileID: 0}
     - target: {fileID: 4102986075333478629, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
@@ -3713,7 +3723,7 @@ PrefabInstance:
     - target: {fileID: 4102986075333478629, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -158.58
+      value: -161.21
       objectReference: {fileID: 0}
     - target: {fileID: 4102986075333478629, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
@@ -3893,7 +3903,7 @@ PrefabInstance:
     - target: {fileID: 6407943377665575728, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
       propertyPath: walkSpeed
-      value: 5.33
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6407943377665575728, guid: f541d158b697ae24782d8d757f579337,
         type: 3}
@@ -4742,6 +4752,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6784b9e2436bf7044ac0d18dd1157830,
+        type: 3}
+      propertyPath: m_TagString
+      value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 6784b9e2436bf7044ac0d18dd1157830,
         type: 3}
@@ -8591,6 +8606,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab1a6113726f64045aaf32db47719d9e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: ab1a6113726f64045aaf32db47719d9e,
         type: 3}
@@ -13663,10 +13683,30 @@ PrefabInstance:
       propertyPath: meleeArea
       value: 
       objectReference: {fileID: 353174419}
+    - target: {fileID: 1748726278835397091, guid: c9a57666fb364a7419faca8328d3c53f,
+        type: 3}
+      propertyPath: m_Speed
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1748726278835397091, guid: c9a57666fb364a7419faca8328d3c53f,
+        type: 3}
+      propertyPath: avoidancePriority
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 1748726278835397091, guid: c9a57666fb364a7419faca8328d3c53f,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2586864075697971761, guid: c9a57666fb364a7419faca8328d3c53f,
         type: 3}
       propertyPath: m_Name
       value: Monster1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2586864075697971761, guid: c9a57666fb364a7419faca8328d3c53f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5559553146328471803, guid: c9a57666fb364a7419faca8328d3c53f,
         type: 3}
