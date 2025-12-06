@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
     float fireDelay;
     bool isFireReady = true;
     bool isAttacking = false;
+    float defaultRotationSpeed;  // �������⸦ ����� ������ ȸ������ ���ϰ�
     // EMP 
     public GameObject GrenadeObj;
 
@@ -323,7 +324,8 @@ public class PlayerController : MonoBehaviour
             if (equipWeapon.type == Weapon.Type.Melee)
             {
                 isAttacking = true;
-                Invoke(nameof(EndAttack), 0.5f);
+                rotationSpeed = 0f;
+                Invoke(nameof(EndAttack), 0.8f);
             }
             equipWeapon.UseWeapon();
             animator.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "swingTrigger" : "shootTrigger");
@@ -335,6 +337,7 @@ public class PlayerController : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
+        rotationSpeed = defaultRotationSpeed;
     }
 
     void Reload()
