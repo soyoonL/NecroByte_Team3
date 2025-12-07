@@ -13,6 +13,7 @@ public class DialogueNPC : MonoBehaviour
     public GameObject dialogPage1;          // 네가 사용하는 페이지들
     public GameObject dialogPage2;
 
+
     [Header("퀘스트 연결")]
     public string relatedMainQuestID;
     public string relatedSubQuestID;

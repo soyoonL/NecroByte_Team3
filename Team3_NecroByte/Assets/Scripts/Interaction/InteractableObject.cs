@@ -126,13 +126,13 @@ public class InteractableObject : MonoBehaviour
         {
             case Item.Type.Coin:
                 pc.chip += item.value;
-                pc.UpdateUI();
+                //pc.UpdateUI();
                 if (pc.chip > pc.maxChip)
                     pc.chip = pc.maxChip;
                 break;
             case Item.Type.HP:
                 pc.health += item.value;
-                pc.UpdateUI();
+                //pc.UpdateUI();
                 if(pc.health > pc.maxHealth)    
                     pc.health = pc.maxHealth;
                 break;

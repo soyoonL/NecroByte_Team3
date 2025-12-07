@@ -62,14 +62,14 @@ public class PlayerController : MonoBehaviour
     GameObject nearObject;
     public Weapon equipWeapon;
     bool isSwap;
-    int equipWeaponIndex = -1;
+    public int equipWeaponIndex = -1;
     // ÀçÀåÀü
     bool Reloading;                            
     // ±ÙÁ¢ °ø°Ý
     float fireDelay;
     bool isFireReady = true;
     bool isAttacking = false;
-    float defaultRotationSpeed;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½
+    float defaultRotationSpeed;  // 
     // EMP 
     public GameObject GrenadeObj;
 
@@ -87,11 +87,14 @@ public class PlayerController : MonoBehaviour
     bool isDamage;
     Renderer[] meshs;
     Color[] originalColors;
+    bool isDead;
+
+    public GameManager manager;
 
     void Start()
     { 
         controller = GetComponent<CharacterController>();
-        UpdateUI();
+        //UpdateUI();
 
         //Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
@@ -101,7 +104,7 @@ public class PlayerController : MonoBehaviour
     {
         meshs = GetComponentsInChildren<Renderer>();
         originalColors = new Color[meshs.Length];
-
+       
         for (int i = 0; i < meshs.Length; i++)
         {
             originalColors[i] = meshs[i].material.GetColor("_BaseColor");
@@ -305,12 +308,6 @@ public class PlayerController : MonoBehaviour
         isSwap = false;
     }
 
-    public void UpdateUI()
-    {
-        healthText.text = $"{health}";
-        coinText.text = $"{chip}";
-    }
-
     void Attack()
     {
         if (equipWeapon == null)
@@ -443,7 +440,7 @@ public class PlayerController : MonoBehaviour
             {
                 Projectile enemyBullet = other.GetComponent<Projectile>();
                 health -= enemyBullet.damage;
-                UpdateUI();
+                //UpdateUI();
                 Debug.Log("µ¥¹ÌÁö!!");
                 StartCoroutine(OnDamage());
             }
