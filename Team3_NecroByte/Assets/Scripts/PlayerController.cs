@@ -356,16 +356,31 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("reloadTrigger");
             Reloading = true;
 
-            Invoke("ReloadOut", 2f); //재장전 속도
+            Invoke("ReloadOut", 3f); //재장전 속도
         }
     }
 
     void ReloadOut()
     {
-        int reAmmo = Ammo < equipWeapon.maxAmmo ? Ammo : equipWeapon.maxAmmo;
-        equipWeapon.curAmmo = reAmmo;
+        if (equipWeapon == null)
+            return;
+
+        
+        int needed = equipWeapon.maxAmmo - equipWeapon.curAmmo;
+
+       
+        if (needed <= 0)
+        {
+            Reloading = false;
+            return;
+        }
+
+      
+        int take = Ammo < needed ? Ammo : needed;
+
+        equipWeapon.curAmmo += take;
+        Ammo -= take;
         Reloading = false;
-        Ammo -= reAmmo;
     }
 
     void Grenade()
