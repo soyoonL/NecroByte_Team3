@@ -94,11 +94,46 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        RaycastHit[] rayHits = Physics.SphereCastAll(transform.position, targetRadius, transform.forward, targetRange, LayerMask.GetMask("Player"));
-
-        if (rayHits.Length > 0 && !isAttack)
+        if (nav != null)
         {
-            StartCoroutine(Attack());
+            nav.stoppingDistance = Mathf.Max(0.1f, targetRadius + 0.3f);
+        }
+
+        Vector3 toTarget = Target.position - transform.position;
+        float distToTarget = toTarget.magnitude;
+
+        if (distToTarget <= targetRange)
+        {
+            
+            RaycastHit hit;
+            Vector3 origin = transform.position + Vector3.up * 0.5f;
+            Vector3 dir = toTarget.normalized;
+
+            bool hasLOS = false;
+            if (Physics.Raycast(origin, dir, out hit, targetRange))
+            {
+                
+                if (hit.collider != null && hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+                {
+                    hasLOS = true;
+                }
+                else
+                {
+                   
+                    Collider[] close = Physics.OverlapSphere(transform.position, targetRadius, LayerMask.GetMask("Player"));
+                    if (close.Length > 0) hasLOS = true;
+                }
+            }
+            else
+            {
+                Collider[] close = Physics.OverlapSphere(transform.position, targetRadius, LayerMask.GetMask("Player"));
+                if (close.Length > 0) hasLOS = true;
+            }
+
+            if (hasLOS && !isAttack)
+            {
+                StartCoroutine(Attack());
+            }
         }
     }
 
@@ -107,13 +142,18 @@ public class Enemy : MonoBehaviour
         isChase = false;
         isAttack = true;
 
+        Vector3 lookPos = Target.position;
+        lookPos.y = transform.position.y;
+        transform.LookAt(lookPos);
+
+
         if (enemyType != Type.Fly)
             anim.SetBool("isAttack", true);
 
         switch (enemyType)
         {
             case Type.Normal:
-                yield return new WaitForSeconds(0.8f);
+                yield return new WaitForSeconds(1f);
                 meleeArea.enabled = true;
 
                 yield return new WaitForSeconds(1f);
