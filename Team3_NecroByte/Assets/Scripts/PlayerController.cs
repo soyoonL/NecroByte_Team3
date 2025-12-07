@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
     { 
         controller = GetComponent<CharacterController>();
         //UpdateUI();
-
+        defaultRotationSpeed = rotationSpeed;
         //Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
@@ -178,12 +178,16 @@ public class PlayerController : MonoBehaviour
         float speed = (h != 0 || v != 0) ? (rKey ? runSpeed : walkSpeed) : 0;
         currentSpeed = speed;
 
+        // 무기 교체& 공격 중 이동 정지
+        if (isSwap || Reloading || isDead || isAttacking)
+        {
+            moveVec = Vector3.zero;
+            currentSpeed = 0f;
+        }
+
         Vector3 finalMove = moveVec * currentSpeed + new Vector3(0, yVelocity, 0);
         controller.Move(finalMove * Time.deltaTime);
-
-        // 무기 교체& 공격 중 이동 정지
-        if (isSwap || Reloading || !isFireReady)
-            moveVec = Vector3.zero;
+         
     }
 
     void UpdateAnimator()
@@ -450,7 +454,8 @@ public class PlayerController : MonoBehaviour
     IEnumerator OnDamage()
     {
         isDamage = true;
-        foreach(Renderer mesh in meshs)
+        pontAni.SetTrigger("HitPont");
+        foreach (Renderer mesh in meshs)
         {
             mesh.material.SetColor("_BaseColor", Color.red);
         }
