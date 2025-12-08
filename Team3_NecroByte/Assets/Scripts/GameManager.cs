@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI playerHPtxt;
     public TextMeshProUGUI playerAmmotxt;
     public TextMeshProUGUI playerCointxt;
+    public TextMeshProUGUI playerGranade;
 
     public Image weapon1Img;
     public Image weapon2Img;
@@ -40,11 +41,13 @@ public class GameManager : MonoBehaviour
         playerHPtxt.text = $"{player.health}";
         playerCointxt.text = $"{player.chip}";
         playerAmmotxt.text = $"{player.Ammo}";
+        playerGranade.text = $"{player.hasGrendes}";
 
         weapon1Img.color = new Color(1, 1, 1, player.hasWeapons[0] ? 1 : 0);
         weapon2Img.color = new Color(1, 1, 1, player.hasWeapons[1] ? 1 : 0);
         weapon3Img.color = new Color(1, 1, 1, player.hasWeapons[2] ? 1 : 0);
         weapon4Img.color = new Color(1, 1, 1, player.hasWeapons[3] ? 1 : 0);
+        weapon5Img.color = new Color(1, 1, 1, player.hasGrendes > 0 ? 1f : 0f);
 
         curweapon1Img.color = new Color(1, 1, 1, player.equipWeaponIndex == 0 ? 1 : 0);
         curweapon2Img.color = new Color(1, 1, 1, player.equipWeaponIndex == 1 ? 1 : 0);
