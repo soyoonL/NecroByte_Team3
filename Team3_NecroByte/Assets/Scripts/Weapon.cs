@@ -62,6 +62,7 @@ public class Weapon : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 1000f))
         {
             shootDir = (hit.point - bulletPos.position).normalized;
+            shootDir.y = 0f; // 수평으로만 발사되도록 y축 방향 무시
         }
         else
         {
