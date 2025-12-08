@@ -30,6 +30,8 @@ public class Enemy : MonoBehaviour
     NavMeshAgent nav;
     Animator anim;
 
+    bool isDead = false;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
@@ -54,6 +56,7 @@ public class Enemy : MonoBehaviour
     }
     private void Update()
     {
+        if (isDead) return;
         if (nav.enabled)
         {
             nav.SetDestination(Target.position);
@@ -192,8 +195,8 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(isDead) return;
         Targeting();
-
     }
 
     void FireBullet()
@@ -257,7 +260,8 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            
+            isDead = true;
+            meleeArea.enabled = false;
             foreach (Renderer r in renderers)
                 r.material.SetColor("_BaseColor", Color.gray);
 
