@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 6407943377665575728}
   - component: {fileID: 2539929612222740324}
   - component: {fileID: 3131570900459540936}
+  - component: {fileID: 7414857196540530446}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -300,6 +301,22 @@ MonoBehaviour:
   interactionKey: 101
   interactionText: {fileID: 0}
   interactionUI: {fileID: 0}
+--- !u!114 &7414857196540530446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9015919754166605775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd9985a17fe2a6043b5b820ed6e1e198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  NormalCrosshair: {fileID: 0}
+  EnemyCrosshair: {fileID: 0}
+  uiCanvas: {fileID: 0}
 --- !u!1001 &2400172842255542330
 PrefabInstance:
   m_ObjectHideFlags: 0
