@@ -1,11 +1,11 @@
-
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
+
     //움직임 관련
     float hAxis;   //좌우 방향키
     float vAxis;   //상하 방햐키
@@ -46,16 +46,16 @@ public class PlayerController : MonoBehaviour
     [Header("회피 설정")]
     public float dodgeDuration = 0.2f;          // 회피 전체 시간
     public float dodgePower = 10f;              // 최대 힘
-    public float dodgeCooldown = 0.4f;          
+    public float dodgeCooldown = 0.4f;
     public AnimationCurve dodgeCurve;           // 속도 커브
 
     public bool isDodgingNow = false;
     bool isDodging = false;
-    bool dodgeOnCooldown =false;
+    bool dodgeOnCooldown = false;
     float dodgeTimer = 0f;
     Vector3 dodgeDirection;
     Vector3 dodgeVec;
-  
+
     [Header("무기 저장")]
     public GameObject[] weapons;
     public bool[] hasWeapons;
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
     bool isSwap;
     public int equipWeaponIndex = -1;
     // 재장전
-    bool Reloading;                            
+    bool Reloading;
     // 근접 공격
     float fireDelay;
     bool isFireReady = true;
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
     public Camera followCamera;
 
     [Header("UI표시")]
-   
+
     public RectTransform crosshair;
 
     // 중력 추가
@@ -91,9 +91,35 @@ public class PlayerController : MonoBehaviour
     public GameManager manager;
     public bool isShopping = false;
     //bool Shopping = false;
+    bool canControl = true;
+
+    Coroutine stopControlCoroutine;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            this.enabled = false;
+            return;
+        }
+
+        meshs = GetComponentsInChildren<Renderer>();
+        originalColors = new Color[meshs.Length];
+
+        for (int i = 0; i < meshs.Length; i++)
+        {
+            originalColors[i] = meshs[i].material.GetColor("_BaseColor");
+        }
+    }
 
     void Start()
-    { 
+    {
         controller = GetComponent<CharacterController>();
         //UpdateUI();
         defaultRotationSpeed = rotationSpeed;
@@ -101,24 +127,18 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
     }
 
-    private void Awake()
-    {
- 
-        meshs = GetComponentsInChildren<Renderer>();
-        originalColors = new Color[meshs.Length];
-       
-        for (int i = 0; i < meshs.Length; i++)
-        {
-            originalColors[i] = meshs[i].material.GetColor("_BaseColor");
-        }
-    }
+
     void Update()
     {
         if (isShopping) return;
         crosshair.position = Input.mousePosition;
 
-        GetInput();
-        HandleMovement();
+        if (canControl)
+        {
+            GetInput();
+            HandleMovement();
+        }
+
         UpdateAnimator();
         Dodge();
         Interation();
@@ -128,6 +148,24 @@ public class PlayerController : MonoBehaviour
         Grenade();
         TurnWithCrosshair();
         Interaction();
+    }
+
+    public void StopControl(float duration)
+    {
+        if (stopControlCoroutine != null)
+        {
+            StopCoroutine(stopControlCoroutine);
+        }
+        canControl = false;
+        ResetInput();
+        stopControlCoroutine = StartCoroutine(StopControlCoroutine(duration));
+    }
+
+    IEnumerator StopControlCoroutine(float time)
+    {
+        yield return new WaitForSeconds(time);
+        stopControlCoroutine = null;
+        canControl = true;
     }
 
     void GetInput()
@@ -147,12 +185,18 @@ public class PlayerController : MonoBehaviour
         tKey = Input.GetMouseButtonDown(1);
     }
 
+    private void ResetInput()
+    {
+        hAxis = vAxis = 0;
+        rKey = dKey = eKey = oneKey = twoKey = threeKey = fourKey = fiveKey = aKey = lKey = tKey = false;
+    }
+
     void HandleMovement()
     {
         float h = hAxis;
         float v = vAxis;
 
-       // 플레이어가 바라보는 방향 기준 이동
+        // 플레이어가 바라보는 방향 기준 이동
         Vector3 forward = transform.forward;
         Vector3 right = transform.right;
 
@@ -182,7 +226,7 @@ public class PlayerController : MonoBehaviour
         currentSpeed = speed;
 
         // 무기 교체& 공격 중 이동 정지
-        if (isSwap || Reloading || isDead || isAttacking )
+        if (isSwap || Reloading || isDead || isAttacking)
         {
             moveVec = Vector3.zero;
             currentSpeed = 0f;
@@ -190,7 +234,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 finalMove = moveVec * currentSpeed + new Vector3(0, yVelocity, 0);
         controller.Move(finalMove * Time.deltaTime);
-         
+
     }
 
     void UpdateAnimator()
@@ -292,7 +336,7 @@ public class PlayerController : MonoBehaviour
         if (twoKey) weaponIndex = 1;
         if (threeKey) weaponIndex = 2;
         if (fourKey) weaponIndex = 3;
-  
+
         if (oneKey || twoKey || threeKey || fourKey && !isDodging && !isDead)
         {
             if (equipWeapon != null) equipWeapon.gameObject.SetActive(false);
@@ -319,11 +363,11 @@ public class PlayerController : MonoBehaviour
     {
         if (equipWeapon == null)
             return;
-       
+
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if(aKey && isFireReady && !isDodging && !isSwap && !isDead)
+        if (aKey && isFireReady && !isDodging && !isSwap && !isDead)
         {
             if (equipWeapon.type == Weapon.Type.Melee)
             {
@@ -333,7 +377,7 @@ public class PlayerController : MonoBehaviour
             }
             equipWeapon.UseWeapon();
             animator.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "swingTrigger" : "shootTrigger");
-           
+
             fireDelay = 0;
         }
     }
@@ -347,14 +391,14 @@ public class PlayerController : MonoBehaviour
     void Reload()
     {
         // 제한사항
-        if(equipWeapon == null) 
+        if (equipWeapon == null)
             return;
         if (equipWeapon.type == Weapon.Type.Melee)
             return;
         if (Ammo == 0)
             return;
 
-        if(lKey && !isDodging && !isSwap && isFireReady && !isDead)
+        if (lKey && !isDodging && !isSwap && isFireReady && !isDead)
         {
             animator.SetTrigger("reloadTrigger");
             Reloading = true;
@@ -368,17 +412,17 @@ public class PlayerController : MonoBehaviour
         if (equipWeapon == null)
             return;
 
-        
+
         int needed = equipWeapon.maxAmmo - equipWeapon.curAmmo;
 
-       
+
         if (needed <= 0)
         {
             Reloading = false;
             return;
         }
 
-      
+
         int take = Ammo < needed ? Ammo : needed;
 
         equipWeapon.curAmmo += take;
@@ -391,7 +435,7 @@ public class PlayerController : MonoBehaviour
         if (hasGrendes == 0)
             return;
 
-        if(tKey && !isDodging && !isSwap && !Reloading && !isDead)
+        if (tKey && !isDodging && !isSwap && !Reloading && !isDead)
         {
             if (cam == null) return;
 
@@ -409,7 +453,7 @@ public class PlayerController : MonoBehaviour
                 GameObject instantGrenade = Instantiate(GrenadeObj, transform.position, transform.rotation);
                 Rigidbody rigidGre = instantGrenade.GetComponent<Rigidbody>();
                 rigidGre.AddForce(dir, ForceMode.Impulse);
-                rigidGre.AddTorque(Vector3.back*1, ForceMode.Impulse);
+                rigidGre.AddTorque(Vector3.back * 1, ForceMode.Impulse);
 
                 hasGrendes--;
 
@@ -420,7 +464,7 @@ public class PlayerController : MonoBehaviour
 
     void Interaction()
     {
-        if (eKey && nearObject != null&& nearObject.tag == "Shop")
+        if (eKey && nearObject != null && nearObject.tag == "Shop")
         {
             //Shopping = true;
             Shop shop = nearObject.GetComponent<Shop>();
@@ -429,7 +473,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if(other.tag=="Weapon" || other.tag == "Shop")
+        if (other.tag == "Weapon" || other.tag == "Shop")
             nearObject = other.gameObject;
 
     }
@@ -439,7 +483,7 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Weapon")
             nearObject = null;
 
-        else if(other.tag == "Shop")
+        else if (other.tag == "Shop")
         {
             Shop shop = nearObject.GetComponent<Shop>();
             shop.EXIT();
@@ -457,7 +501,7 @@ public class PlayerController : MonoBehaviour
                 FadeManager.Instance.FadeOutAndLoadScene(info);
             }
         }
-        else if(other.tag == "EnemyBullet")
+        else if (other.tag == "EnemyBullet")
         {
             if (!isDamage)
             {
@@ -481,7 +525,7 @@ public class PlayerController : MonoBehaviour
 
         if (health <= 0 && !isDead)
         {
-            
+
             OnDie();
         }
 

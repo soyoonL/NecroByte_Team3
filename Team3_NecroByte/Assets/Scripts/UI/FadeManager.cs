@@ -35,6 +35,11 @@ public class FadeManager : MonoBehaviour
 
     IEnumerator FadeOutRoutine(string sceneName)
     {
+        if (PlayerController.Instance != null)
+        {
+            PlayerController.Instance.StopControl(fadeDuration + 0.5f);
+        }
+
         float timer = 0f;
         Color c = fadeImage.color;
 
@@ -48,10 +53,8 @@ public class FadeManager : MonoBehaviour
 
         SceneManager.LoadScene(sceneName);
 
-        // 씬 다 로드될때까지 한 프레임 기다림
         yield return null;
 
-        // 0.1초 정도 텀 주기
         yield return new WaitForSeconds(0.1f);
 
         StartCoroutine(FadeInRoutine());
@@ -60,8 +63,8 @@ public class FadeManager : MonoBehaviour
     IEnumerator FadeInRoutine()
     {
         Color c = fadeImage.color;
-        
-        if(fadeDuration > 0)
+
+        if (fadeDuration > 0)
         {
             float timer = 0f;
             c.a = 1f;

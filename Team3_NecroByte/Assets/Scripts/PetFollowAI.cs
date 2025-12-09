@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PetFollowAI : MonoBehaviour
@@ -12,15 +10,23 @@ public class PetFollowAI : MonoBehaviour
 
     private Vector3 targetPos;
 
+    private void Start()
+    {
+        if (PlayerController.Instance != null)
+        {
+            player = PlayerController.Instance.transform;
+        }
+    }
+
     private void Update()
     {
         if (player == null) return;
 
-        targetPos = player.position + (- player.forward * followDistance) + (Vector3.up * heightOffset);
+        targetPos = player.position + (-player.forward * followDistance) + (Vector3.up * heightOffset);
 
         transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * smoothness);
 
         transform.LookAt(player.position + Vector3.up * 1.5f);
-       
+
     }
 }
