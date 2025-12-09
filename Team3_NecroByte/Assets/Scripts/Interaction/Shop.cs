@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
     public RectTransform uiGroup;
     PlayerController enterPlayer;
-
+    public TextMeshProUGUI playerCointxt;
     public GameObject[] itemObj;
     public int[] itemPrice;
     public Transform[] itemPos;
@@ -15,6 +16,7 @@ public class Shop : MonoBehaviour
     public void Enter(PlayerController player)
     {
         enterPlayer = player;
+        playerCointxt.text = $"{player.chip}";
         uiGroup.anchoredPosition = Vector3.zero;
         player.isShopping = true;
         manager.gamePanel.SetActive(false);
