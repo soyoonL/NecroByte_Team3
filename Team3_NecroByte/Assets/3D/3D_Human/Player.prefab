@@ -256,6 +256,7 @@ MonoBehaviour:
   coinText: {fileID: 0}
   crosshair: {fileID: 0}
   manager: {fileID: 0}
+  isShopping: 0
 --- !u!143 &2539929612222740324
 CharacterController:
   m_ObjectHideFlags: 0
@@ -316,6 +317,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   NormalCrosshair: {fileID: 0}
   EnemyCrosshair: {fileID: 0}
+  InteractCrosshair: {fileID: 0}
   uiCanvas: {fileID: 0}
 --- !u!1001 &2400172842255542330
 PrefabInstance:
@@ -443,7 +445,7 @@ PrefabInstance:
     - target: {fileID: 9174983013833472031, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9174983013833472031, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,
         type: 3}
