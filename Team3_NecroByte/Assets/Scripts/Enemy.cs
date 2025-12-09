@@ -258,7 +258,7 @@ public class Enemy : MonoBehaviour
             foreach (Renderer r in renderers)
                 r.material.SetColor("_BaseColor", Color.white);
         }
-        else
+        else if(!isDead)
         {
             isDead = true;
             meleeArea.enabled = false;
