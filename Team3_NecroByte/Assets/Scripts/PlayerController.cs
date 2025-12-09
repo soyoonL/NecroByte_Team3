@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
     bool isDead;
 
     public GameManager manager;
+    public bool isShopping = false;
+    //bool Shopping = false;
 
     void Start()
     { 
@@ -112,6 +114,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
+        if (isShopping) return;
         crosshair.position = Input.mousePosition;
 
         GetInput();
@@ -179,7 +182,7 @@ public class PlayerController : MonoBehaviour
         currentSpeed = speed;
 
         // 무기 교체& 공격 중 이동 정지
-        if (isSwap || Reloading || isDead || isAttacking)
+        if (isSwap || Reloading || isDead || isAttacking )
         {
             moveVec = Vector3.zero;
             currentSpeed = 0f;
@@ -419,6 +422,7 @@ public class PlayerController : MonoBehaviour
     {
         if (eKey && nearObject != null&& nearObject.tag == "Shop")
         {
+            //Shopping = true;
             Shop shop = nearObject.GetComponent<Shop>();
             shop.Enter(this);
         }

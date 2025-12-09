@@ -10,17 +10,22 @@ public class Shop : MonoBehaviour
     public GameObject[] itemObj;
     public int[] itemPrice;
     public Transform[] itemPos;
+    public GameManager manager;
 
     public void Enter(PlayerController player)
     {
         enterPlayer = player;
         uiGroup.anchoredPosition = Vector3.zero;
+        player.isShopping = true;
+        manager.gamePanel.SetActive(false);
     }
 
    
     public void EXIT()
     {
         uiGroup.anchoredPosition = Vector3.down * 1000;
+        enterPlayer.isShopping = false;
+        manager.gamePanel.SetActive(true);
     }
 
     public void Buy(int index)
