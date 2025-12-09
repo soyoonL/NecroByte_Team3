@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -21,8 +22,11 @@ public class Enemy : MonoBehaviour
     public float floatingHeight = 2f; 
     public Transform firePos;         
     public GameObject bulletPrefab;   
-    public float fireDelay = 1.5f;    
+    public float fireDelay = 1.5f;
 
+    [Header("UI")]
+    public Slider healthSlider;
+    public GameObject healthPanel;
 
     Rigidbody rigid;
     BoxCollider boxCollider;
@@ -45,7 +49,22 @@ public class Enemy : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
+        if (healthPanel != null)
+            healthPanel.SetActive(false);
+
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = curHealth;
+        }
+
         Invoke("ChaseStart", 2);
+    }
+
+    public void ShowHealthPanel(bool show)
+    {
+        if (healthPanel != null)
+            healthPanel.SetActive(show);
     }
 
     void ChaseStart()
@@ -222,6 +241,7 @@ public class Enemy : MonoBehaviour
         {
             Weapon weapon = other.GetComponent<Weapon>();
             curHealth -= weapon.damage;
+            UpdateHealthUI();
             Vector3 reactVec = transform.position - other.transform.position;
 
             StartCoroutine(OnDamage(reactVec));
@@ -231,6 +251,7 @@ public class Enemy : MonoBehaviour
         {
             Projectile projectile = other.GetComponent<Projectile>();
             curHealth -= projectile.damage;
+            UpdateHealthUI();
             Vector3 reactVec = transform.position - other.transform.position;
             Destroy(other.gameObject);
 
@@ -242,8 +263,19 @@ public class Enemy : MonoBehaviour
     public void HitByGrenade(Vector3 explosionPos)
     {
         curHealth -= 100;
+        UpdateHealthUI();
+
         Vector3 reactVec = transform.position - explosionPos;
         StartCoroutine(OnDamage(reactVec));
+    }
+
+    void UpdateHealthUI()
+    {
+        if (healthSlider != null)
+        {
+            
+            healthSlider.value = Mathf.Max(0, curHealth);
+        }
     }
 
     IEnumerator OnDamage(Vector3 reactVec)
@@ -268,6 +300,13 @@ public class Enemy : MonoBehaviour
             gameObject.layer = 9;
             isChase = false;
             nav.enabled = false;
+
+            if (healthSlider != null)
+            {
+                Transform panel = healthSlider.gameObject.transform.parent;
+                if (panel != null)
+                    panel.gameObject.SetActive(false);
+            }
 
             if (coins != null && coins.Length > 0)
             {

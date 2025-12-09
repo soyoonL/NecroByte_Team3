@@ -340,7 +340,7 @@ PrefabInstance:
     - target: {fileID: 6859211082908262246, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.85569
       objectReference: {fileID: 0}
     - target: {fileID: 6859211082908262246, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,
         type: 3}
@@ -445,7 +445,7 @@ PrefabInstance:
     - target: {fileID: 9174983013833472031, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9174983013833472031, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,
         type: 3}
@@ -515,7 +515,7 @@ BoxCollider:
   m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 7, y: 7, z: 6}
-  m_Center: {x: 0, y: 5.32, z: 1.74}
+  m_Center: {x: -2.9, y: 5.08, z: 1.74}
 --- !u!96 &7072760507081178088 stripped
 TrailRenderer:
   m_CorrespondingSourceObject: {fileID: 4857235891444405202, guid: 5607cb6de8dcd5845bff3dcac9d1ef78,

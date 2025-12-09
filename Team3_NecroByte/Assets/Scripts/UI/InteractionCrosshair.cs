@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class InteractionCrosshair : MonoBehaviour
 {
+    private Enemy lastPointedEnemy;
     [SerializeField] Camera cam;
 
     RaycastHit hitInfo;
@@ -68,13 +69,25 @@ public class InteractionCrosshair : MonoBehaviour
         {
             NotContact();
         }
-            
+
     }
 
     void Contact()
     {
         if (hitInfo.transform.CompareTag("Enemy"))
         {
+            Enemy pointedEnemy = hitInfo.transform.GetComponent<Enemy>();
+            if (pointedEnemy == null)
+                pointedEnemy = hitInfo.transform.GetComponentInParent<Enemy>(); // In case the Enemy script is on the parent
+
+            if (lastPointedEnemy != null && lastPointedEnemy != pointedEnemy)
+                lastPointedEnemy.ShowHealthPanel(false);
+
+            if (pointedEnemy != null)
+            {
+                pointedEnemy.ShowHealthPanel(true);
+                lastPointedEnemy = pointedEnemy;
+            }
             if (!isContact)
             {
                 isContact = true;
@@ -108,6 +121,12 @@ public class InteractionCrosshair : MonoBehaviour
             if (NormalCrosshair) NormalCrosshair.SetActive(true);
             if (InteractCrosshair) InteractCrosshair.SetActive(false);
         }
-           
+
+        if (lastPointedEnemy != null)
+        {
+            lastPointedEnemy.ShowHealthPanel(false);
+            lastPointedEnemy = null;
+        }
+
     }
 }
