@@ -49,6 +49,11 @@ public class Enemy : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
+        if (PlayerController.Instance != null)
+        {
+            Target = PlayerController.Instance.transform;
+        }
+
         if (healthPanel != null)
             healthPanel.SetActive(false);
 
@@ -76,11 +81,18 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         if (isDead) return;
-        if (nav.enabled)
+
+        if (nav != null && nav.enabled && nav.isOnNavMesh && Target != null)
         {
             nav.SetDestination(Target.position);
             nav.isStopped = !isChase;
         }
+
+        //if (nav.enabled)
+       // {
+           // nav.SetDestination(Target.position);
+           // nav.isStopped = !isChase;
+       // }
 
         if (enemyType == Type.Fly && model != null)
         {
@@ -185,17 +197,21 @@ public class Enemy : MonoBehaviour
                 break;
             case Type.Rush:
                 yield return new WaitForSeconds(0.1f);
-                // enable physics temporarily for the rush impulse
-                rigid.isKinematic = false;
-                rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
+
+                // No physics, move forward yourself
+                float rushDuration = 0.5f;
+                float rushSpeed = 20f;
+                float timer = 0f;
                 meleeArea.enabled = true;
 
-                yield return new WaitForSeconds(0.5f);
-                rigid.velocity = Vector3.zero;
-                // disable physics again so NavMeshAgent regains smooth control
-                rigid.isKinematic = true;
-                meleeArea.enabled = false;
+                while (timer < rushDuration)
+                {
+                    transform.position += transform.forward * rushSpeed * Time.deltaTime;
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
 
+                meleeArea.enabled = false;
                 yield return new WaitForSeconds(2f);
                 break;
             case Type.Fly:
