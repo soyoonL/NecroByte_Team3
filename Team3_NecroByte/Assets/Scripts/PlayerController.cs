@@ -77,8 +77,7 @@ public class PlayerController : MonoBehaviour
     public Camera followCamera;
 
     [Header("UI표시")]
-    public TMP_Text healthText;
-    public TMP_Text coinText;
+   
     public RectTransform crosshair;
 
     // 중력 추가
@@ -104,6 +103,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+ 
         meshs = GetComponentsInChildren<Renderer>();
         originalColors = new Color[meshs.Length];
        
