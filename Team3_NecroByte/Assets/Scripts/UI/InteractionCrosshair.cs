@@ -11,6 +11,7 @@ public class InteractionCrosshair : MonoBehaviour
 
     [SerializeField] GameObject NormalCrosshair;
     [SerializeField] GameObject EnemyCrosshair;
+    [SerializeField] GameObject InteractCrosshair;
 
     [SerializeField] Canvas uiCanvas;
 
@@ -31,6 +32,7 @@ public class InteractionCrosshair : MonoBehaviour
             // For Screen Space - Overlay canvases or world-space GameObjects used as "cursor"
             if (NormalCrosshair) NormalCrosshair.transform.position = mousePos;
             if (EnemyCrosshair) EnemyCrosshair.transform.position = mousePos;
+            if (InteractCrosshair) InteractCrosshair.transform.position = mousePos;
         }
         else
         {
@@ -39,11 +41,13 @@ public class InteractionCrosshair : MonoBehaviour
             Vector2 localPoint;
             RectTransform normalRT = NormalCrosshair ? NormalCrosshair.GetComponent<RectTransform>() : null;
             RectTransform enemyRT = EnemyCrosshair ? EnemyCrosshair.GetComponent<RectTransform>() : null;
+            RectTransform interactRT = InteractCrosshair ? InteractCrosshair.GetComponent<RectTransform>() : null;
 
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, mousePos, uiCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : uiCanvas.worldCamera, out localPoint))
             {
                 if (normalRT) normalRT.anchoredPosition = localPoint;
                 if (enemyRT) enemyRT.anchoredPosition = localPoint;
+                if (interactRT) interactRT.anchoredPosition = localPoint;
             }
         }
     }
@@ -76,6 +80,17 @@ public class InteractionCrosshair : MonoBehaviour
                 isContact = true;
                 if (EnemyCrosshair) EnemyCrosshair.SetActive(true);
                 if (NormalCrosshair) NormalCrosshair.SetActive(false);
+                if (InteractCrosshair) InteractCrosshair.SetActive(false);
+            }
+        }
+        else if (hitInfo.transform.CompareTag("Shop") || hitInfo.transform.CompareTag("Weapon") || hitInfo.transform.CompareTag("Item"))
+        {
+            if (!isContact)
+            {
+                isContact = true;
+                if (InteractCrosshair) InteractCrosshair.SetActive(true);
+                if (NormalCrosshair) NormalCrosshair.SetActive(false);
+                if (EnemyCrosshair) EnemyCrosshair.SetActive(false);
             }
         }
         else
@@ -91,6 +106,7 @@ public class InteractionCrosshair : MonoBehaviour
             isContact = false;
             if (EnemyCrosshair) EnemyCrosshair.SetActive(false);
             if (NormalCrosshair) NormalCrosshair.SetActive(true);
+            if (InteractCrosshair) InteractCrosshair.SetActive(false);
         }
            
     }
